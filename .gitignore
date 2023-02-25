@@ -4,4 +4,4 @@ Testing
 CMakeCache.txt
 *.tcl
 Makefile
-quoilam
+libquoilam_libs.a

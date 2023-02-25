@@ -16,7 +16,7 @@ target_link_directories(quoilam_libs
 
 # add_executable(quoilam ${SRC_FILE})
 add_executable(testexec 
-    testexec.cpp 
+    src/testexec.cpp 
     )
 
 target_link_libraries(testexec 
