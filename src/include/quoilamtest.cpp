@@ -1,4 +1,4 @@
-#include "test.h"
+#include "quoilamtest.h"
 #include <iostream>
 void quoilam::print()
 {

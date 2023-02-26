@@ -13,6 +13,10 @@ class Response
 public:
     std::string name;
 };
+
+
+
+
 class StringRequest: public Request
 {
 public:

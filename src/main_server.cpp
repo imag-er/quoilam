@@ -1,6 +1,6 @@
 #include "include/server.h"
 #include "include/singleton.h"
-#include<iostream>
+#include <iostream>
 #include <string>
 Response* echo_handler(Request* str)
 {
@@ -12,7 +12,10 @@ Response* echo_handler(Request* str)
 }
 int main()
 {
-    Server s = singleton_<Server>();
+    // quoilam::Server s = singleton_<quoilam::Server>();
+
+    // quoilam::Server s = quoilam::singleton_<quoilam::Server>();
+    quoilam::Server s = *quoilam::singleton<quoilam::Server>::instance();
     s.listen("0.0.0.0", 8888);
     s.bind("echo", echo_handler);
     s.exec();
