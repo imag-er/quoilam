@@ -4,24 +4,36 @@ project(quoilam VERSION 0.1.0)
 include(CTest)
 enable_testing()
 
-file(GLOB LIB_SOURCE "src/include/*.cpp")
-
 # add libs (aka.cpp)
-add_library(quoilam_libs STATIC ${LIB_SOURCE})
+foreach(lib_name server client singleton quoilamtest)
+    add_library(${lib_name}
+        STATIC
+        src/include/${lib_name}.h
+        src/include/${lib_name}.cpp
+    )
+    target_link_directories(${lib_name}
+        PUBLIC
+        ${PROJECT_SOURCE_DIR}/include)
+endforeach(lib_name)
 
 # add .h and .hpp to include_path
-target_link_directories(quoilam_libs
-    PUBLIC 
-    ${PROJECT_SOURCE_DIR}/include)
 
 # add_executable(quoilam ${SRC_FILE})
-add_executable(testexec 
-    src/testexec.cpp 
-    )
+add_executable(testexec
+    src/testexec.cpp
+)
+target_link_libraries(testexec
+    PRIVATE
+    quoilamtest
+)
 
-target_link_libraries(testexec 
-    PRIVATE 
-    quoilam_libs
+add_executable(main_server
+    src/main_server.cpp
+)
+target_link_libraries(main_server
+    PRIVATE
+    server
+    singleton
 )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
