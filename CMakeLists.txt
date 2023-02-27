@@ -19,22 +19,18 @@ endforeach(lib_name)
 # add .h and .hpp to include_path
 
 # add_executable(quoilam ${SRC_FILE})
-add_executable(testexec
-    src/testexec.cpp
-)
-target_link_libraries(testexec
-    PRIVATE
-    quoilamtest
-)
+foreach(exec testexec)
+    add_executable(${exec}
+        src/${exec}.cpp
+    )
 
-add_executable(main_server
-    src/main_server.cpp
-)
-target_link_libraries(main_server
-    PRIVATE
-    server
-    singleton
-)
+    target_link_libraries(${exec}
+        PRIVATE
+        quoilamtest
+        server
+        client
+    )
+endforeach(exec)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

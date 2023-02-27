@@ -4,4 +4,6 @@ Testing
 CMakeCache.txt
 *.tcl
 Makefile
-libquoilam_libs.a
+*.a
+main_server
+testexec
