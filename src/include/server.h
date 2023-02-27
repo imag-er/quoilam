@@ -9,7 +9,7 @@ namespace quoilam
     public:
         Server();
         void listen(const std::string& ip, int port);
-        void bind(const std::string&, std::function<Response* (Request*)> handler);
+        void bind(const std::string& service_name, std::function<Response* (Request*)> handler);
         void exec();
 
     private:

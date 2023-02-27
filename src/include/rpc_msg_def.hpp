@@ -1,30 +1,40 @@
 #pragma once
 #include <string>
 
+#define MSG_DEF(x) \ 
+using Ptr = x*;
 
-
-class Request
+namespace quoilam
 {
-public:
-    std::string name;
-};
-class Response
-{
-public:
-    std::string name;
-};
+
+    class Request
+    {
+    public:
+        std::string name;
+        using Ptr = Request*;
+        virtual ~Request() = default;
+    };
+    class Response
+    {
+    public:
+        std::string name;
+        using Ptr = Response*;
+        virtual ~Response() = default;
+    };
 
 
+    class StringRequest: public Request
+    {
+    public:
+        MSG_DEF(StringRequest)
+            std::string str1, str2;
+    };
 
+    class StringResponse: public Response
+    {
+    public:
+        MSG_DEF(StringResponse)
 
-class StringRequest: public Request
-{
-public:
-    std::string str1, str2;
-};
-
-class StringResponse: public Response
-{
-public:
-    std::string strres;
-};
+            std::string strres;
+    };
+}

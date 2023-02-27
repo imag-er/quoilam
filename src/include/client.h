@@ -1,18 +1,25 @@
 #pragma once 
 #include "rpc_msg_def.hpp"
 #include <string>
-class Client
+namespace quoilam
 {
-public:
-    void connect(const std::string& ip, int port);
-    Response* orgcall(Request* request);
+    class Client
+    {
+    public:
+        void connect(const std::string& ip, int port);
+        Response* orgcall(Request* request);
 
-    template<class T>
-    const T& call(Request* request);
+        template<class RequestType>
+        Response::Ptr call(RequestType* request);
+    };
+
+
+    template<class RequestType>
+    Response::Ptr Client::call(RequestType* request)
+    {
+        return *this->orgcall(
+            dynamic_cast<Request*>(request)
+        );
+    }
+
 };
-
-template<class T>
-const T& Client::call<T>(Request* request)
-{
-    return *(T*)orgcall(request);
-}
