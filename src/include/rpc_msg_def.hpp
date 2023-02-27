@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
 
-#define MSG_DEF(x) \ 
-using Ptr = x*;
+#define MSG_DEF(x) \
+    using Ptr = x*;
 
 namespace quoilam
 {

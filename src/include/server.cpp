@@ -11,12 +11,14 @@
 #include <arpa/inet.h>
 #include <cstdlib>
 #include <cstring>
-quoilam::Server::Server()
+quoilam::Server::Server():
+    listen_socket(socket(AF_INET, SOCK_STREAM, 0))
 {
-    listen_socket = socket(AF_INET, SOCK_STREAM, 0);
-    // listen_socket == -1
-
-
+    if (listen_socket < 0)
+    {
+        std::cout << "server:unable to create socket" << std::endl;
+    }
+    std::cout << "server:listen socket" << std::endl;
 
 }
 void quoilam::Server::listen(const std::string& ip, int port)
@@ -26,11 +28,23 @@ void quoilam::Server::listen(const std::string& ip, int port)
     server_addr->sin_addr.s_addr = inet_addr(ip.c_str());
     server_addr->sin_port = htons(port);
 
-    ::bind(listen_socket, (struct sockaddr*)server_addr, sizeof(*server_addr));
-    // return == -1
+    int irtn = ::bind(listen_socket, (struct sockaddr*)server_addr, sizeof(*server_addr));
+    if (irtn < 0)
+    {
+        std::cout << "server:unable to bind" << std::endl;
+        return;
+    }
+    std::cout << "server: bind " << std::endl;
 
     delete server_addr;
-    ::listen(listen_socket, 10);
+    irtn = ::listen(listen_socket, 10);
+    if (irtn < 0)
+    {
+        std::cout << "server:unable to listen" << std::endl;
+        return;
+    }
+    std::cout << "server:listen " << std::endl;
+
     // return == -1
 
 }
@@ -54,8 +68,13 @@ void quoilam::Server::exec()
                 (struct sockaddr*)&client_addr,
                 (socklen_t*)&socklen) != -1)
         {
-            std::cout << "successfully connected" << inet_ntoa(client_addr.sin_addr) << std::endl;
+            // std::cout << "server:successfully connected client : " << inet_ntoa(client_addr.sin_addr) << std::endl;
             while (1) {}
         }
     }
+}
+
+quoilam::Server::~Server()
+{
+    close(listen_socket);
 }

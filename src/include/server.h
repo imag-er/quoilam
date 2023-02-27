@@ -12,7 +12,8 @@ namespace quoilam
         void bind(const std::string& service_name, std::function<Response* (Request*)> handler);
         void exec();
 
-    private:
+        ~Server();
+    protected:
         int listen_socket;
     };
 };

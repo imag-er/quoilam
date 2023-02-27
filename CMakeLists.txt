@@ -19,7 +19,7 @@ endforeach(lib_name)
 # add .h and .hpp to include_path
 
 # add_executable(quoilam ${SRC_FILE})
-foreach(exec testexec)
+foreach(exec testexec main_client main_server)
     add_executable(${exec}
         src/${exec}.cpp
     )
@@ -30,6 +30,8 @@ foreach(exec testexec)
         server
         client
     )
+
+    
 endforeach(exec)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

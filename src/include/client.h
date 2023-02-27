@@ -7,19 +7,23 @@ namespace quoilam
     {
     public:
         void connect(const std::string& ip, int port);
-        Response* orgcall(Request* request);
+        Response::Ptr orgcall(Request::Ptr request);
 
-        template<class RequestType>
-        Response::Ptr call(RequestType* request);
+        template<class RequestType, class ResponseType>
+        ResponseType* call(RequestType* request);
+
+        ~Client();
+    protected:
+        int connect_socket;
     };
 
 
-    template<class RequestType>
-    Response::Ptr Client::call(RequestType* request)
+    template<class RequestType, class ResponseType>
+    ResponseType* Client::call(RequestType* request)
     {
-        return *this->orgcall(
-            dynamic_cast<Request*>(request)
-        );
+        return dynamic_cast<ResponseType*>(this->orgcall(
+            dynamic_cast<Request::Ptr>(request)
+        ));
     }
 
 };

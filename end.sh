@@ -1,0 +1,2 @@
+killall main_server
+killall main_client
