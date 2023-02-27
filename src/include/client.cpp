@@ -40,16 +40,16 @@ void quoilam::Client::connect(const std::string& ip, int port)
 
 }
 
-quoilam::Response::Ptr quoilam::Client::orgcall(Request::Ptr request)
+const quoilam::Response quoilam::Client::orgcall(const Request& request)
 {
     const char* buffer = "test";
     int nbytessend = send(connect_socket, buffer, 4, 0);
     if (nbytessend < 0)
     {
         std::cout << "client:unable to send" << std::endl;
-        return nullptr;
+        return Response();
     }
-    return nullptr;
+    return Response();
 }
 
 

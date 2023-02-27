@@ -7,10 +7,10 @@ namespace quoilam
     {
     public:
         void connect(const std::string& ip, int port);
-        Response::Ptr orgcall(Request::Ptr request);
+        const Response orgcall(const Request& request);
 
         template<class RequestType, class ResponseType>
-        ResponseType* call(RequestType* request);
+        const ResponseType call(const RequestType& request);
 
         ~Client();
     protected:
@@ -19,10 +19,10 @@ namespace quoilam
 
 
     template<class RequestType, class ResponseType>
-    ResponseType* Client::call(RequestType* request)
+    const ResponseType Client::call(const RequestType& request)
     {
-        return dynamic_cast<ResponseType*>(this->orgcall(
-            dynamic_cast<Request::Ptr>(request)
+        return dynamic_cast<const ResponseType*>(&this->orgcall(
+            dynamic_cast<const Request&>(request)
         ));
     }
 

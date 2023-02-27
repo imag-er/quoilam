@@ -7,14 +7,14 @@ int main(int, char**)
     using namespace quoilam;
     Client c = singleton_<Client>();
     c.connect("0.0.0.0", 25384);
-    StringRequest::Ptr req = new StringRequest;
-    StringResponse::Ptr resp = new StringResponse;
+    StringRequest req;
+    StringResponse resp;
 
-    req->name = "echo";
-    req->str1 = "first";
-    req->str2 = "second";
+    req.name = "echo";
+    req.str1 = "first";
+    req.str2 = "second";
     resp = c.call<StringRequest, StringResponse>(req);
-    std::cout << (resp == nullptr) << std::endl;
+
     // std::cout << resp->strres << std::endl;
 
     return 0;

@@ -13,13 +13,13 @@ namespace quoilam
     class singleton
     {
     public:
-        static T* instance()
+        static T& instance()
         {
             if (pobj == nullptr)
             {
                 pobj = new T();
             }
-            return pobj;
+            return *pobj;
         }
 
     private:

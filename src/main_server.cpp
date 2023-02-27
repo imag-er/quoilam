@@ -16,7 +16,7 @@ int main()
     // quoilam::Server s = singleton_<quoilam::Server>();
 
     // quoilam::Server s = quoilam::singleton_<quoilam::Server>();
-    Server s = *singleton<Server>::instance();
+    Server s = singleton<Server>::instance();
     s.listen("0.0.0.0", 25384);
     s.bind("echo", echo_handler);
     s.exec();
