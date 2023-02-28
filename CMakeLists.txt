@@ -1,11 +1,13 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(quoilam VERSION 0.1.0)
+# Enable C++17
+set(CMAKE_CXX_STANDARD 17)
 
 include(CTest)
 enable_testing()
 
 # add libs (aka.cpp)
-foreach(lib_name server client singleton quoilamtest)
+foreach(lib_name server client quoilamtest)
     add_library(${lib_name}
         STATIC
         src/include/${lib_name}.h
