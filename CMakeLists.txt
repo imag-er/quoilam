@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 include(CTest)
 enable_testing()
 
+find_package(Threads REQUIRED)
+
 # add libs (aka.cpp)
 foreach(lib_name server client quoilamtest)
     add_library(${lib_name}
@@ -31,6 +33,7 @@ foreach(exec testexec main_client main_server)
         quoilamtest
         server
         client
+        pthread
     )
 
     

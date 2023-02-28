@@ -8,9 +8,9 @@ int main(int, char**)
     Client c = singleton_<Client>();
     c.connect("0.0.0.0", 25384);
 
-    resp = c.send(req);
+    std::string result = c.send("666");
 
-    std::cout << resp.strres << std::endl;
+    std::cout << result << std::endl;
 
     return 0;
 }

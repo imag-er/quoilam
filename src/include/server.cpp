@@ -1,6 +1,5 @@
 #include <string>
 #include <functional>
-#include "rpc_msg_def.hpp"
 #include "server.h"
 #include <sys/fcntl.h>
 #include <sys/socket.h>
@@ -10,15 +9,21 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <cstdlib>
+#include <memory>
 #include <cstring>
+#include <thread>
+#include <chrono>
 quoilam::Server::Server():
     listen_socket(socket(AF_INET, SOCK_STREAM, 0))
 {
+
     if (listen_socket < 0)
     {
         std::cout << "server:unable to create socket" << std::endl;
     }
     std::cout << "server:listen socket" << std::endl;
+
+
 
 }
 void quoilam::Server::listen(const std::string& ip, int port)
@@ -49,10 +54,7 @@ void quoilam::Server::listen(const std::string& ip, int port)
 
 }
 
-void quoilam::Server::bind(const std::string& service_name, std::function<Response* (Request*)> handler)
-{
 
-}
 
 
 void quoilam::Server::exec()
@@ -69,6 +71,12 @@ void quoilam::Server::exec()
                 (socklen_t*)&socklen) != -1)
         {
             // std::cout << "server:successfully connected client : " << inet_ntoa(client_addr.sin_addr) << std::endl;
+            int flags = fcntl(client_socket, F_GETFL, 0);
+            fcntl(client_socket, F_SETFL, flags & ~O_NONBLOCK);
+
+            std::thread(
+                std::bind(&Server::listen_callback, this, std::placeholders::_1),
+                client_socket).detach();
             while (1) {}
         }
     }
@@ -77,4 +85,33 @@ void quoilam::Server::exec()
 quoilam::Server::~Server()
 {
     close(listen_socket);
+}
+
+void quoilam::Server::listen_callback(int socket_)
+{
+
+    uint32_t recvstr_len;
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(1000ms);
+    int iret = ::recv(socket_, &recvstr_len, 4, MSG_WAITALL);
+    if (iret <= 0)
+    {
+        std::cout << "server:receive error:" << iret << std::endl;
+    }
+    std::cout << "server:" << recvstr_len << " bytes to be received" << std::endl;
+
+    Byte* buf = new Byte[recvstr_len];
+    ::recv(socket_, buf, recvstr_len, MSG_WAITALL);
+    std::cout << "server:received:" << buf << std::endl;
+
+    std::string response = LP(buf);
+    uint32_t sendstr_len;
+    ::send(socket_, &sendstr_len, 4, 0);
+    ::send(socket_, response.c_str(), sendstr_len, 0);
+    delete[] buf;
+}
+
+const std::string quoilam::Server::LP(const std::string& str)
+{
+    return str;
 }
