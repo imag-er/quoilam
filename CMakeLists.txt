@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(quoilam VERSION 0.1.0)
+
 # Enable C++17
 set(CMAKE_CXX_STANDARD 17)
 
@@ -35,8 +36,6 @@ foreach(exec testexec main_client main_server)
         client
         pthread
     )
-
-    
 endforeach(exec)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
