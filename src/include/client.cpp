@@ -49,22 +49,22 @@ const std::string quoilam::Client::send(const std::string& str)
     uint32_t sendstr_len = str.length();
 
     // 先发送4字节的request长度数据
-    ::send(connect_socket, &sendstr_len, 4, 0);
-    std::cout << "client:" << sendstr_len << " bytes to be send" << std::endl;
+    int irtn = ::send(connect_socket, &sendstr_len, 4, 0);
+    std::cout << "client:" << irtn << " bytes to be send" << std::endl;
 
     // 发送request
-    ::send(connect_socket, str.c_str(), sendstr_len, 0);
-    std::cout << "client:" << sendstr_len << " bytes sent" << std::endl;
+    irtn = ::send(connect_socket, str.c_str(), sendstr_len, 0);
+    std::cout << "client:" << irtn << " bytes sent" << std::endl;
 
     // 接收从服务器发来的response长度
     uint32_t recvstr_len;
-    ::recv(connect_socket, &recvstr_len, 4, MSG_WAITALL);
-    std::cout << "client:" << recvstr_len << " bytes to be receive" << std::endl;
+    irtn = ::recv(connect_socket, &recvstr_len, 4, MSG_WAITALL);
+    std::cout << "client:" << irtn << " bytes to be receive" << std::endl;
 
     // 接受response
     Byte* recv_buf = new Byte[recvstr_len];
-    ::recv(connect_socket, recv_buf, recvstr_len, MSG_WAITALL);
-    std::cout << "client:received" << recv_buf << std::endl;
+    irtn = ::recv(connect_socket, recv_buf, recvstr_len, MSG_WAITALL);
+    std::cout << "client:received " << irtn << std::endl;
 
 
     const std::string rtn(recv_buf);

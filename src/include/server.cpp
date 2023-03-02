@@ -65,10 +65,10 @@ void quoilam::Server::exec()
         struct sockaddr_in client_addr;
         int client_socket, socklen = sizeof(client_addr);
 
-        if (client_socket =
+        if ((client_socket =
             accept(listen_socket,
                 (struct sockaddr*)&client_addr,
-                (socklen_t*)&socklen) != -1)
+                (socklen_t*)&socklen)) != -1)
         {
             // std::cout << "server:successfully connected client : " << inet_ntoa(client_addr.sin_addr) << std::endl;
             int flags = fcntl(client_socket, F_GETFL, 0);
@@ -77,6 +77,7 @@ void quoilam::Server::exec()
             std::thread(
                 std::bind(&Server::listen_callback, this, std::placeholders::_1),
                 client_socket).detach();
+            std::cout << "socket id:" << client_socket << " connected" << std::endl;
             while (1) {}
         }
     }
@@ -89,14 +90,15 @@ quoilam::Server::~Server()
 
 void quoilam::Server::listen_callback(int socket_)
 {
-
+    std::cout << "socket id:" << socket_ << " thread started" << std::endl;
     uint32_t recvstr_len;
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(1000ms);
     int iret = ::recv(socket_, &recvstr_len, 4, MSG_WAITALL);
     if (iret <= 0)
     {
-        std::cout << "server:receive error:" << iret << std::endl;
+        std::cout << "server:receive error:" << iret << "\terrno:" << errno << std::endl;
+
     }
     std::cout << "server:" << recvstr_len << " bytes to be received" << std::endl;
 
