@@ -23,8 +23,6 @@ quoilam::Server::Server():
     }
     std::cout << "server:listen socket" << std::endl;
 
-
-
 }
 void quoilam::Server::listen(const std::string& ip, int port)
 {

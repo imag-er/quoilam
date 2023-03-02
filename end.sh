@@ -1,2 +1,2 @@
-killall main_server
-killall main_client
+killall example_server
+killall example_client
