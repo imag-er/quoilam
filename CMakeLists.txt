@@ -15,15 +15,15 @@ set(quoilam_libs server client quoilamtest threadpool)
 set(system_libs pthread)
 set(example_executables testexec example_client example_server)
 
-set(EXECUTABLE_OUTPUT_PATH build/executable/)
-set(LIBRARY_OUTPUT_PATH build/library/)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/executable)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/library)
 
 # add libs (aka.cpp)
 foreach(lib_name ${quoilam_libs})
     add_library(${lib_name}
         STATIC
-        src/include/${lib_name}.h
-        src/include/${lib_name}.cpp
+        ${PROJECT_SOURCE_DIR}/src/include/${lib_name}.h
+        ${PROJECT_SOURCE_DIR}/src/include/${lib_name}.cpp
     )
 endforeach(lib_name)
 
@@ -31,7 +31,7 @@ link_libraries(${quoilam_libs} ${system_libs})
 
 foreach(exec ${example_executables})
     add_executable(${exec}
-        src/examples/${exec}.cpp
+        ${PROJECT_SOURCE_DIR}/src/examples/${exec}.cpp
     )
 endforeach(exec)
 
