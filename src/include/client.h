@@ -1,5 +1,4 @@
 #pragma once 
-#include "rpc_msg_def.hpp"
 #include <string>
 namespace quoilam
 {

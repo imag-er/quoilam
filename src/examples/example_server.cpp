@@ -1,5 +1,5 @@
-#include "include/server.h"
-#include "include/singleton.hpp"
+#include "server.h"
+#include "singleton.hpp"
 #include <iostream>
 #include <string>
 using namespace quoilam;

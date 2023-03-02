@@ -1,11 +1,8 @@
 #include "client.h"
 #include <iostream>
 #include <string>
-#include <functional>
-#include "rpc_msg_def.hpp"
 #include <sys/fcntl.h>
 #include <sys/socket.h>
-#include <iostream>
 #include <sys/types.h>
 #include <unistd.h>
 #include <netinet/in.h>

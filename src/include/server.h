@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <functional>
-#include "rpc_msg_def.hpp"
 namespace quoilam
 {
     using Byte = char;
@@ -18,7 +17,7 @@ namespace quoilam
         ~Server();
     protected:
         const std::string LP(const std::string&);
-        
+
         int listen_socket;
     };
 };
