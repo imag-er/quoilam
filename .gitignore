@@ -2,8 +2,6 @@ CMakeFiles
 Testing
 *.cmake
 CMakeCache.txt
-*.tcl
+build/
 Makefile
-*.a
-main_server
-testexec
+.vscode
