@@ -6,22 +6,26 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <type_traits>
 namespace quoilam
 {
     class ThreadPool
     {
     public:
-        explicit ThreadPool(const uint32_t &thread_cnt_max);
+
+        ThreadPool(const uint32_t& thread_cnt_max);
         ~ThreadPool();
 
-        const uint32_t size() const { return thread_cnt; }
+        const uint32_t running_size() const { return thread_cnt; }
+        const uint32_t waiting_size() const { return tasks.size(); }
         const bool is_running() const { return running; }
 
         template <class F, class... Args>
-        auto push_task(F &&f, Args &&...args) -> std::future<decltype(f(args...))>;
+        auto push_task(F&& f, Args &&...args) -> std::future<decltype(f(args...))>;
 
     private:
         using task_t = std::function<void()>;
+
 
         std::atomic_bool running;
         std::atomic_uint32_t thread_cnt;
@@ -32,21 +36,18 @@ namespace quoilam
     };
 
     template <class F, class... Args>
-    auto ThreadPool::push_task(F &&f, Args &&...args) -> std::future<decltype(f(args...))>
+    auto ThreadPool::push_task(F&& f, Args &&...args) -> std::future<decltype(f(args...))>
     {
         using return_t = decltype(f(args...));
-        using pkg_task_t = typename std::result_of<std::packaged_task<return_t>>::type;
+        using pkg_task_t = std::packaged_task<return_t()>;
 
         auto task_ptr = std::make_shared<pkg_task_t>(
             std::bind(std::forward<F>(f), std::forward<Args>(args)...));
-
-        std::future<return_t> ret_value = task_ptr->get_future();
-
         {
             // lock_guard对当前块加锁 所以这里有一对奇怪的括弧
             std::lock_guard<std::mutex> queue_lock{lock};
             tasks.emplace([task_ptr]()
-                          { (*task_ptr)(); });
+                { (*task_ptr)(); });
         }
 
         // 唤醒线程
