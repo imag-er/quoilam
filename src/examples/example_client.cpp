@@ -5,7 +5,7 @@
 int main(int, char**)
 {
     using namespace quoilam;
-    Client c = singleton_<Client>();
+    Client c;
     c.connect("0.0.0.0", 25384);
 
     std::string result = c.send("661231236");

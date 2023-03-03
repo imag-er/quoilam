@@ -1,11 +1,12 @@
 #pragma once
+#include <utility>
 
 namespace quoilam
 {
     // via static variant in func
     // since c++11 , totally thread safe
     template <class T>
-    T& singleton_();
+    T &singleton_();
 
     // via template class
     // async err
@@ -13,30 +14,52 @@ namespace quoilam
     class singleton
     {
     public:
-        static T& instance()
+        template <class... Args>
+        static T &instance(Args &&...args)
         {
             if (pobj == nullptr)
-            {
+                pobj = new T(std::forward<Args>(args)...);
+
+            return *pobj;
+        }
+        static T &instance()
+        {
+            if (pobj == nullptr)
                 pobj = new T();
-            }
+
             return *pobj;
         }
 
-    private:
-        singleton()
+        T& get()
         {
-
+            return *pobj;
         }
-        static T* pobj;
+        void destroy()
+        {
+            delete pobj;
+            pobj = nullptr;
+        }
+
+    private:
+        singleton() {}
+        static T *pobj;
     };
 
     template <class T>
-    inline T& singleton_()
+    T *singleton<T>::pobj = nullptr;
+
+    template <class T, class... Args>
+    inline T &singleton_(Args &&...args)
+    {
+        static T instance(std::forward<Args>(args)...);
+        return instance;
+    }
+    
+    template <class T>
+    inline T &singleton_()
     {
         static T instance;
         return instance;
     }
 
-    template<class T>
-    T* singleton<T>::pobj = nullptr;
 }

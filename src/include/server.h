@@ -16,7 +16,8 @@ namespace quoilam
 
         ~Server();
     protected:
-        const std::string LP(const std::string&);
+        void byte_explain(const Byte* input,Byte* output,const int& input_len);
+
 
         int listen_socket;
     };

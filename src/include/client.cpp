@@ -50,30 +50,6 @@ const std::string quoilam::Client::send(const std::string &str)
     std::string recvstr=*(std::string*)buffer;
     delete[] buffer;
     return recvstr;
-    // // TODO: 此处可以优化局部变量 共用内存 避免反复开辟
-    // uint32_t sendstr_len = str.length();
-
-    // // 先发送4字节的request长度数据
-    // int irtn = ::send(connect_socket, &sendstr_len, 4, 0);
-    // std::cout << "client:" << irtn << " bytes to be send" << std::endl;
-
-    // // 发送request
-    // irtn = ::send(connect_socket, str.c_str(), sendstr_len, 0);
-    // std::cout << "client:" << irtn << " bytes sent" << std::endl;
-
-    // // 接收从服务器发来的response长度
-    // uint32_t recvstr_len;
-    // irtn = ::recv(connect_socket, &recvstr_len, 4, MSG_WAITALL);
-    // std::cout << "client:" << irtn << " bytes to be receive" << std::endl;
-
-    // // 接受response
-    // Byte *recv_buf = new Byte[recvstr_len];
-    // irtn = ::recv(connect_socket, recv_buf, recvstr_len, MSG_WAITALL);
-    // std::cout << "client:received " << irtn << std::endl;
-
-    // const std::string rtn(recv_buf);
-    // delete[] recv_buf;
-    // return rtn;
 }
 
 void quoilam::Client::send_size(const uint32_t &size)

@@ -13,8 +13,7 @@
 #include <cstring>
 #include <thread>
 #include <chrono>
-quoilam::Server::Server():
-    listen_socket(socket(AF_INET, SOCK_STREAM, 0))
+quoilam::Server::Server() : listen_socket(socket(AF_INET, SOCK_STREAM, 0))
 {
 
     if (listen_socket < 0)
@@ -22,16 +21,15 @@ quoilam::Server::Server():
         std::cout << "server:unable to create socket" << std::endl;
     }
     std::cout << "server:listen socket" << std::endl;
-
 }
-void quoilam::Server::listen(const std::string& ip, int port)
+void quoilam::Server::listen(const std::string &ip, int port)
 {
-    struct sockaddr_in* server_addr = new sockaddr_in;
+    struct sockaddr_in *server_addr = new sockaddr_in;
     server_addr->sin_family = AF_INET;
     server_addr->sin_addr.s_addr = inet_addr(ip.c_str());
     server_addr->sin_port = htons(port);
 
-    int irtn = ::bind(listen_socket, (struct sockaddr*)server_addr, sizeof(*server_addr));
+    int irtn = ::bind(listen_socket, (struct sockaddr *)server_addr, sizeof(*server_addr));
     if (irtn < 0)
     {
         std::cout << "server:unable to bind" << std::endl;
@@ -49,11 +47,7 @@ void quoilam::Server::listen(const std::string& ip, int port)
     std::cout << "server:listen " << std::endl;
 
     // return == -1
-
 }
-
-
-
 
 void quoilam::Server::exec()
 {
@@ -64,9 +58,9 @@ void quoilam::Server::exec()
         int client_socket, socklen = sizeof(client_addr);
 
         if ((client_socket =
-            accept(listen_socket,
-                (struct sockaddr*)&client_addr,
-                (socklen_t*)&socklen)) != -1)
+                 accept(listen_socket,
+                        (struct sockaddr *)&client_addr,
+                        (socklen_t *)&socklen)) != -1)
         {
             // std::cout << "server:successfully connected client : " << inet_ntoa(client_addr.sin_addr) << std::endl;
             int flags = fcntl(client_socket, F_GETFL, 0);
@@ -74,9 +68,12 @@ void quoilam::Server::exec()
 
             std::thread(
                 std::bind(&Server::listen_callback, this, std::placeholders::_1),
-                client_socket).detach();
+                client_socket)
+                .detach();
             std::cout << "socket id:" << client_socket << " connected" << std::endl;
-            while (1) {}
+            while (1)
+            {
+            }
         }
     }
 }
@@ -84,6 +81,13 @@ void quoilam::Server::exec()
 quoilam::Server::~Server()
 {
     close(listen_socket);
+}
+
+void quoilam::Server::byte_explain(const Byte *input, Byte *output, const int &input_len)
+{
+    memset(output, 0, input_len);
+    memcpy(output, input, input_len);
+    *output = input_len;
 }
 
 void quoilam::Server::listen_callback(int socket_)
@@ -96,22 +100,21 @@ void quoilam::Server::listen_callback(int socket_)
     if (iret <= 0)
     {
         std::cout << "server:receive error:" << iret << "\terrno:" << errno << std::endl;
-
     }
     std::cout << "server:" << recvstr_len << " bytes to be received" << std::endl;
 
-    Byte* buf = new Byte[recvstr_len];
+    Byte *buf = new Byte[recvstr_len];
     ::recv(socket_, buf, recvstr_len, MSG_WAITALL);
     std::cout << "server:received:" << buf << std::endl;
 
-    std::string response = LP(buf);
-    uint32_t sendstr_len;
-    ::send(socket_, &sendstr_len, 4, 0);
-    ::send(socket_, response.c_str(), sendstr_len, 0);
-    delete[] buf;
-}
+    // 暂时这么做 假定收发长度相同 还有待改进
+    uint32_t sendstr_len = recvstr_len;
+    // Byte *response_buffer = new Byte[recvstr_len]{0};
 
-const std::string quoilam::Server::LP(const std::string& str)
-{
-    return str;
+    // byte_explain(buf, response_buffer, recvstr_len);
+    std::cout << "server:explained message:" << buf << std::endl;
+    ::send(socket_, &sendstr_len, 4, 0);
+    ::send(socket_, buf, sendstr_len, 0);
+
+    delete[] buf;
 }
