@@ -14,10 +14,18 @@ namespace quoilam
     public:
 
         ThreadPool(const uint32_t& thread_cnt_max);
+
+        // 禁止拷贝 移动
+        ThreadPool(const ThreadPool&) = delete;
+        ThreadPool(const ThreadPool&&) = delete;
+        ThreadPool& operator=(const ThreadPool&) = delete;
+        ThreadPool& operator=(const ThreadPool&&) = delete;
+
         ~ThreadPool();
 
         const uint32_t running_size() const { return thread_cnt; }
         const uint32_t waiting_size() const { return tasks.size(); }
+        const uint32_t max_size() const { return max_thread_cnt; }
         const bool is_running() const { return running; }
 
         template <class F, class... Args>
@@ -26,7 +34,7 @@ namespace quoilam
     private:
         using task_t = std::function<void()>;
 
-
+        const uint32_t max_thread_cnt;
         std::atomic_bool running;
         std::atomic_uint32_t thread_cnt;
         std::queue<task_t> tasks;
@@ -34,6 +42,10 @@ namespace quoilam
         std::vector<std::thread> worker_threads;
         std::condition_variable cv;
     };
+
+
+
+
 
     template <class F, class... Args>
     auto ThreadPool::push_task(F&& f, Args &&...args) -> std::future<decltype(f(args...))>

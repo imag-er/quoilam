@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 #include <functional>
+#include <sys/socket.h>
+#include "threadpool.h"
 namespace quoilam
 {
     using Byte = char;
@@ -12,13 +14,14 @@ namespace quoilam
         void listen(const std::string& ip, int port);
         void exec();
 
-        void listen_callback(int socket_);
 
         ~Server();
     protected:
-        void byte_explain(const Byte* input,Byte* output,const int& input_len);
+        void handle_socket(int client_socket, sockaddr_in s_info);
+        void listen_callback(int socket_);
 
-
+    private:
+        ThreadPool* tpool = nullptr;
         int listen_socket;
     };
 };

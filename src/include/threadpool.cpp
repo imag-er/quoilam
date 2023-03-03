@@ -3,7 +3,7 @@
 
 
 quoilam::ThreadPool::ThreadPool(const uint32_t& thread_cnt_max):
-    running(true)
+    running(true), max_thread_cnt(thread_cnt_max)
 {
     for (uint32_t i = 0; i < thread_cnt_max; ++i)
     {
@@ -16,6 +16,7 @@ quoilam::ThreadPool::ThreadPool(const uint32_t& thread_cnt_max):
                     {
                         // 块加锁
                         std::unique_lock<std::mutex> queue_lock{lock};
+
                         // 没在运行或者有任务
                         cv.wait(queue_lock, [this]() {return !running || !tasks.empty();});
                         if (!running && tasks.empty()) return;
