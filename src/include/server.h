@@ -3,6 +3,10 @@
 #include <functional>
 #include <sys/socket.h>
 #include "threadpool.h"
+#include <sys/types.h>
+#include <unistd.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 namespace quoilam
 {
     using Byte = char;

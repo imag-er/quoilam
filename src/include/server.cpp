@@ -3,10 +3,6 @@
 #include "server.h"
 #include <sys/fcntl.h>
 #include <iostream>
-#include <sys/types.h>
-#include <unistd.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
 #include <cstdlib>
 #include <memory>
 #include <cstring>
@@ -15,9 +11,8 @@
 #include "singleton.hpp"
 
 // 构造函数 初始化socket 线程池
-quoilam::Server::Server():
-    listen_socket(socket(AF_INET, SOCK_STREAM, 0)),
-    tpool(singleton<ThreadPool>::instance(16))
+quoilam::Server::Server() : listen_socket(socket(AF_INET, SOCK_STREAM, 0)),
+                            tpool(singleton<ThreadPool>::instance(16))
 {
     // 检查监听socket
     if (listen_socket < 0)
@@ -34,34 +29,34 @@ quoilam::Server::Server():
         return;
     }
     std::cout << "server:threadpool started successfully" << std::endl;
-
-
 }
 
 void quoilam::Server::handle_socket(int client_socket, sockaddr_in s_info)
 {
     int flags = fcntl(client_socket, F_GETFL, 0);
     fcntl(client_socket, F_SETFL, flags & ~O_NONBLOCK);
-    std::thread(
+
+    tpool->push_task(
         std::bind(&Server::listen_callback, this, std::placeholders::_1),
-        client_socket)
-        .detach();
-    std::cout << "socket id:" << client_socket << " connected" << std::endl;
+        client_socket);
+
+    std::cout << "socket id:" << client_socket << "\t"
+              << "ip:" << inet_ntoa(s_info.sin_addr) << std::endl;
 }
 
 // 监听端口
-void quoilam::Server::listen(const std::string& ip, int port)
+void quoilam::Server::listen(const std::string &ip, int port)
 {
-    struct sockaddr_in* server_addr = new sockaddr_in;
+    struct sockaddr_in *server_addr = new sockaddr_in;
     server_addr->sin_family = AF_INET;
     server_addr->sin_addr.s_addr = inet_addr(ip.c_str());
     server_addr->sin_port = htons(port);
 
     // bind到端口
-    int irtn = ::bind(listen_socket, (struct sockaddr*)server_addr, sizeof(*server_addr));
+    int irtn = ::bind(listen_socket, (struct sockaddr *)server_addr, sizeof(*server_addr));
     if (irtn < 0)
     {
-        std::cout << "server:unable to bind" << std::endl;
+        std::cout << "server:unable to bind:" <<irtn<<  std::endl;
         return;
     }
     std::cout << "server: bind " << std::endl;
@@ -86,9 +81,9 @@ void quoilam::Server::exec()
         int client_socket, socklen = sizeof(client_addr);
 
         if ((client_socket =
-            accept(listen_socket,
-                (struct sockaddr*)&client_addr,
-                (socklen_t*)&socklen)) != -1)
+                 accept(listen_socket,
+                        (struct sockaddr *)&client_addr,
+                        (socklen_t *)&socklen)) != -1)
         {
             handle_socket(client_socket, client_addr);
         }
@@ -99,8 +94,6 @@ quoilam::Server::~Server()
 {
     close(listen_socket);
 }
-
-
 
 void quoilam::Server::listen_callback(int socket_)
 {
@@ -115,7 +108,7 @@ void quoilam::Server::listen_callback(int socket_)
     }
     std::cout << "server:" << recvstr_len << " bytes to be received" << std::endl;
 
-    Byte* buf = new Byte[recvstr_len];
+    Byte *buf = new Byte[recvstr_len];
     ::recv(socket_, buf, recvstr_len, MSG_WAITALL);
     std::cout << "server:received:" << buf << std::endl;
 
