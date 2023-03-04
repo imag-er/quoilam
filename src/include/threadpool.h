@@ -12,14 +12,13 @@ namespace quoilam
     class ThreadPool
     {
     public:
-
-        ThreadPool(const uint32_t& thread_cnt_max);
+        ThreadPool(const uint32_t &thread_cnt_max);
 
         // 禁止拷贝 移动
-        ThreadPool(const ThreadPool&) = delete;
-        ThreadPool(const ThreadPool&&) = delete;
-        ThreadPool& operator=(const ThreadPool&) = delete;
-        ThreadPool& operator=(const ThreadPool&&) = delete;
+        ThreadPool(const ThreadPool &) = delete;
+        ThreadPool(const ThreadPool &&) = delete;
+        ThreadPool &operator=(const ThreadPool &) = delete;
+        ThreadPool &operator=(const ThreadPool &&) = delete;
 
         ~ThreadPool();
 
@@ -28,27 +27,30 @@ namespace quoilam
         const uint32_t max_size() const { return max_thread_cnt; }
         const bool is_running() const { return running; }
 
+        void run();
+        void set_paused();
+
         template <class F, class... Args>
-        auto push_task(F&& f, Args &&...args) -> std::future<decltype(f(args...))>;
+        auto push_task(F &&f, Args &&...args) -> std::future<decltype(f(args...))>;
 
     private:
         using task_t = std::function<void()>;
 
         const uint32_t max_thread_cnt;
+
+        std::atomic_bool being_paused;
         std::atomic_bool running;
         std::atomic_uint32_t thread_cnt;
         std::queue<task_t> tasks;
         std::mutex lock;
         std::vector<std::thread> worker_threads;
+
         std::condition_variable cv;
+        std::condition_variable cv_paused;
     };
 
-
-
-
-
     template <class F, class... Args>
-    auto ThreadPool::push_task(F&& f, Args &&...args) -> std::future<decltype(f(args...))>
+    auto ThreadPool::push_task(F &&f, Args &&...args) -> std::future<decltype(f(args...))>
     {
         using return_t = decltype(f(args...));
         using pkg_task_t = std::packaged_task<return_t()>;
@@ -59,7 +61,7 @@ namespace quoilam
             // lock_guard对当前块加锁 所以这里有一对奇怪的括弧
             std::lock_guard<std::mutex> queue_lock{lock};
             tasks.emplace([task_ptr]()
-                { (*task_ptr)(); });
+                          { (*task_ptr)(); });
         }
 
         // 唤醒线程
