@@ -40,8 +40,9 @@ void quoilam::Server::handle_socket(int client_socket, sockaddr_in s_info)
         std::bind(&Server::listen_callback, this, std::placeholders::_1),
         client_socket);
 
-    std::cout << "socket id:" << client_socket << "\t"
-              << "ip:" << inet_ntoa(s_info.sin_addr) << std::endl;
+    std::cout << "socket id:" << client_socket
+              << "\tip:" << inet_ntoa(s_info.sin_addr)
+              << "\tport:" << s_info.sin_port << std::endl;
 }
 
 // 监听端口
@@ -56,14 +57,14 @@ void quoilam::Server::listen(const std::string &ip, int port)
     int irtn = ::bind(listen_socket, (struct sockaddr *)server_addr, sizeof(*server_addr));
     if (irtn < 0)
     {
-        std::cout << "server:unable to bind:" <<irtn<<  std::endl;
+        std::cout << "server:unable to bind:" << irtn << std::endl;
         return;
     }
     std::cout << "server: bind " << std::endl;
 
     // 监听端口
     delete server_addr;
-    irtn = ::listen(listen_socket, 10);
+    irtn = ::listen(listen_socket, 64);
     if (irtn < 0)
     {
         std::cout << "server:unable to listen" << std::endl;
@@ -100,7 +101,6 @@ void quoilam::Server::listen_callback(int socket_)
     std::cout << "socket id:" << socket_ << " thread started" << std::endl;
     uint32_t recvstr_len;
     using namespace std::chrono_literals;
-    std::this_thread::sleep_for(1000ms);
     int iret = ::recv(socket_, &recvstr_len, 4, MSG_WAITALL);
     if (iret <= 0)
     {

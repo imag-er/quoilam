@@ -13,7 +13,7 @@ include_directories(src/include/)
 
 set(quoilam_libs server client quoilamtest threadpool)
 set(system_libs pthread)
-set(example_executables testexec testclient testserver testthreadpool)
+set(example_executables test_exec test_client test_server test_threadpool test_multiclient)
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/executable)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/library)
