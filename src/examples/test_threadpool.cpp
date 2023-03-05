@@ -35,10 +35,10 @@ int main()
     ThreadPool* pool = singleton<ThreadPool>::instance(16);
 
     auto f = [](int a, int b) {return a + b;};
-    // int rtn1 = pool->push_task(f, 1, 2).get();
-    // int rtn2 = pool->push_task(f, 10, 20).get();
+    int rtn1 = pool->push_task(f, 1, 2).get();
+    int rtn2 = pool->push_task(f, 10, 20).get();
 
-    // std::cout << rtn1 << '\t' << rtn2 << std::endl;
+    std::cout << rtn1 << '\t' << rtn2 << std::endl;
 
     pool->run();
     for (int i = 0;i < 20;i++)

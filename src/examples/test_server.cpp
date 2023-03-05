@@ -1,7 +1,5 @@
 #include "server.h"
 #include "singleton.hpp"
-#include <iostream>
-#include <string>
 
 int main()
 {
@@ -11,3 +9,4 @@ int main()
     s->exec();
     return 0;
 }
+
