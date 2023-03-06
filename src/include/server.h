@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include "stdlog.h"
 namespace quoilam
 {
     using Byte = char;
@@ -27,5 +28,6 @@ namespace quoilam
     private:
         ThreadPool* tpool = nullptr;
         int listen_socket;
+        stdlog* logger = nullptr;
     };
 };

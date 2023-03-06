@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     auto dtime = end_time - begin_time;
 
     cout.rdbuf(buf);
-    printf("本次测试%u客户端并发\t包内容:\"%s\"\t包大小:%lu\n共用时%lldus.\n",
+    printf("本次测试%u客户端并发\t包内容:\"%s\"\t包大小:%lu\n共用时%ldus.\n",
            count, teststr.c_str(), sizeof(teststr),
            chrono::duration_cast<chrono::microseconds>(dtime).count());
 
