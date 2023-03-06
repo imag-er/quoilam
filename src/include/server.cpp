@@ -126,7 +126,7 @@ void quoilam::Server::listen_callback(int socket_)
 
     // byte_explain(buf, response_buffer, recvstr_len);
     std::cout << "server:explained message:" << buf << std::endl;
-    logger->log("processed message:", buf);
+    logger->log("processed message:", buf + 20);
     ::send(socket_, &sendstr_len, 4, 0);
     ::send(socket_, buf, sendstr_len, 0);
 

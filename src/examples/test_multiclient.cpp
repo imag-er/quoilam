@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <vector>
 #include <iostream>
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     using namespace std;
     using namespace quoilam;
@@ -20,15 +20,15 @@ int main(int argc, char **argv)
     uint32_t count = atoi(argv[1]);
     vector<Client> vv;
     string teststr = "测试字符串";
-    ThreadPool *pool = singleton<ThreadPool>::instance(count);
+    ThreadPool* pool = singleton<ThreadPool>::instance(count);
 
     for (int i = 0; i < count; i++)
     {
         vv.push_back(Client());
         vv.back().connect("127.0.0.1", 25384);
-        pool->push_task([&](string test_text)
-                        { vv.back().send(test_text); },
-                        teststr);
+        pool->push_task([&vv, i](const string& test_text)
+            { vv[i].send(test_text); },
+            teststr);
     }
 
     auto begin_time = chrono::steady_clock::now();
@@ -43,8 +43,8 @@ int main(int argc, char **argv)
 
     cout.rdbuf(buf);
     printf("本次测试%u客户端并发\t包内容:\"%s\"\t包大小:%lu\n共用时%ldus.\n",
-           count, teststr.c_str(), sizeof(teststr),
-           chrono::duration_cast<chrono::microseconds>(dtime).count());
+        count, teststr.c_str(), sizeof(teststr),
+        chrono::duration_cast<chrono::microseconds>(dtime).count());
 
     return 0;
 }
