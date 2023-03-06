@@ -26,12 +26,12 @@ quoilam::Server::Server():
     logger->log("successfully listening port");
 
     // 检查线程池
-    if (tpool != nullptr)
+    if (tpool == nullptr)
     {
         logger->log("server:thread pool initialization failed");
         return;
     }
-    logger->log("thread pool successfullt initialized");
+    logger->log("thread pool successfully initialized");
 }
 
 void quoilam::Server::handle_socket(int client_socket, sockaddr_in s_info)
