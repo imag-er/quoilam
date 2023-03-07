@@ -1,6 +1,10 @@
 #include "threadpool.h"
-
-quoilam::ThreadPool::ThreadPool(const uint32_t &thread_cnt_max) : running(true), max_thread_cnt(thread_cnt_max), being_paused(true)
+#include "singleton.hpp"
+quoilam::ThreadPool::ThreadPool(const uint32_t& thread_cnt_max):
+    running(true),
+    max_thread_cnt(thread_cnt_max),
+    being_paused(true),
+    logger(new stdlog("threadpool"))
 {
 
     for (uint32_t i = 0; i < thread_cnt_max; ++i)
@@ -15,10 +19,10 @@ quoilam::ThreadPool::ThreadPool(const uint32_t &thread_cnt_max) : running(true),
                         // 块加锁
                         std::unique_lock<std::mutex> queue_lock{lock};
                         cv.wait(queue_lock, [this]()
-                                { return !being_paused; });
+                            { return !being_paused; });
                         // 没在运行或者有任务
                         cv.wait(queue_lock, [this]()
-                                { return !running || (!tasks.empty()); });
+                            { return !running || (!tasks.empty()); });
                         if (!running && tasks.empty())
                             return;
                         task = std::move(tasks.front());
@@ -40,7 +44,7 @@ quoilam::ThreadPool::~ThreadPool()
         running = false;
     }
     cv.notify_all();
-    for (auto &thread : worker_threads)
+    for (auto& thread : worker_threads)
         thread.join();
 }
 
@@ -49,6 +53,7 @@ void quoilam::ThreadPool::run()
     {
         std::unique_lock<std::mutex> queue_lock(lock);
         being_paused = false;
+        logger->log(waiting_size());
         cv_paused.notify_all();
     }
 }

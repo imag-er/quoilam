@@ -104,15 +104,14 @@ quoilam::Server::~Server()
 
 void quoilam::Server::listen_callback(int socket_)
 {
-
-
-    logger->log("socket_id:\t", socket_, "\t thread started");
+    logger->log("socket_id:", socket_, "\t thread started");
     uint32_t recvstr_len;
     using namespace std::chrono_literals;
     int iret = ::recv(socket_, &recvstr_len, 4, MSG_WAITALL);
     if (iret <= 0)
     {
         logger->log("receiving \"length_data\" failed\t", iret, "\terrno", errno);
+        return;
     }
     logger->log(recvstr_len, " bytes to be receive");
 
@@ -125,8 +124,7 @@ void quoilam::Server::listen_callback(int socket_)
     // Byte *response_buffer = new Byte[recvstr_len]{0};
 
     // byte_explain(buf, response_buffer, recvstr_len);
-    std::cout << "server:explained message:" << buf << std::endl;
-    logger->log("processed message:", buf + 20);
+    logger->log("processed message[20:]:", buf + 20);
     ::send(socket_, &sendstr_len, 4, 0);
     ::send(socket_, buf, sendstr_len, 0);
 

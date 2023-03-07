@@ -51,6 +51,7 @@ void quoilam::Client::connect(const std::string& ip, int port)
 
 const std::string quoilam::Client::send(const std::string& str)
 {
+    logger->log("sending msg:", str);
     send_size(str.length());
     send_bytes((char*)&str, str.length());
     int nbytes = recv_size();

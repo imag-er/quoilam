@@ -7,18 +7,19 @@
 #include <condition_variable>
 #include <atomic>
 #include <type_traits>
+#include "stdlog.h"
 namespace quoilam
 {
     class ThreadPool
     {
     public:
-        ThreadPool(const uint32_t &thread_cnt_max);
+        ThreadPool(const uint32_t& thread_cnt_max);
 
         // 禁止拷贝 移动
-        ThreadPool(const ThreadPool &) = delete;
-        ThreadPool(const ThreadPool &&) = delete;
-        ThreadPool &operator=(const ThreadPool &) = delete;
-        ThreadPool &operator=(const ThreadPool &&) = delete;
+        ThreadPool(const ThreadPool&) = delete;
+        ThreadPool(const ThreadPool&&) = delete;
+        ThreadPool& operator=(const ThreadPool&) = delete;
+        ThreadPool& operator=(const ThreadPool&&) = delete;
 
         ~ThreadPool();
 
@@ -31,7 +32,7 @@ namespace quoilam
         void set_paused();
 
         template <class F, class... Args>
-        auto push_task(F &&f, Args &&...args) -> std::future<decltype(f(args...))>;
+        auto push_task(F&& f, Args &&...args) -> std::future<decltype(f(args...))>;
 
     private:
         using task_t = std::function<void()>;
@@ -47,10 +48,12 @@ namespace quoilam
 
         std::condition_variable cv;
         std::condition_variable cv_paused;
+
+        stdlog* logger = nullptr;
     };
 
     template <class F, class... Args>
-    auto ThreadPool::push_task(F &&f, Args &&...args) -> std::future<decltype(f(args...))>
+    auto ThreadPool::push_task(F&& f, Args &&...args) -> std::future<decltype(f(args...))>
     {
         using return_t = decltype(f(args...));
         using pkg_task_t = std::packaged_task<return_t()>;
@@ -61,7 +64,7 @@ namespace quoilam
             // lock_guard对当前块加锁 所以这里有一对奇怪的括弧
             std::lock_guard<std::mutex> queue_lock{lock};
             tasks.emplace([task_ptr]()
-                          { (*task_ptr)(); });
+                { (*task_ptr)(); });
         }
 
         // 唤醒线程

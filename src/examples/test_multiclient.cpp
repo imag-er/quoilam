@@ -11,6 +11,8 @@ int main(int argc, char** argv)
 {
     using namespace std;
     using namespace quoilam;
+
+    mutex m;
     if (argc < 2)
     {
         cout << "too few arguments" << endl;
@@ -27,11 +29,16 @@ int main(int argc, char** argv)
 
     for (int i = 0; i < count; i++)
     {
-        vv.push_back(Client());
-        vv.back().connect("127.0.0.1", 25384);
+        Client c;
+        c.connect("127.0.0.1", 25384);
+        vv.push_back(std::move(c));
         pool->push_task(
-            std::bind(&Client::send, &vv[i], std::placeholders::_1),
-            teststr
+            // std::bind(&Client::send, &vv[i], std::placeholders::_1),
+            // teststr
+            [&]()
+            {
+                cout << "<<" << c.send(teststr) << ">>";
+            }
         );
     }
 
@@ -40,7 +47,6 @@ int main(int argc, char** argv)
     while (pool->running_size() != 0)
     {
     };
-    pool->set_paused();
     auto end_time = chrono::steady_clock::now();
 
     auto dtime = end_time - begin_time;
@@ -51,5 +57,12 @@ int main(int argc, char** argv)
         count, teststr.c_str(), sizeof(teststr),
         chrono::duration_cast<chrono::microseconds>(dtime).count());
 
+    while (1)
+    {
+        if (pool->running_size() == 0)
+        {
+            cout << "所有线程都已退出" << endl;
+        }
+    };
     return 0;
 }

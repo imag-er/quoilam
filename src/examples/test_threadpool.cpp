@@ -22,7 +22,7 @@ int func(int index)
             << "\tworking threads:" << singleton<ThreadPool>::get()->running_size()
             << "\twaiting threads:" << singleton<ThreadPool>::get()->waiting_size()
             ;
-        std::cout.flush();
+
         m.unlock();
         std::this_thread::sleep_for(500ms);
     }
@@ -32,6 +32,7 @@ int func(int index)
 
 int main()
 {
+    std::cout << 111;
     ThreadPool* pool = singleton<ThreadPool>::instance(16);
 
     auto f = [](int a, int b) {return a + b;};
@@ -41,11 +42,11 @@ int main()
     std::cout << rtn1 << '\t' << rtn2 << std::endl;
 
     pool->run();
-    for (int i = 0;i < 20;i++)
-    {
-        pool->push_task(func, i);
-        std::this_thread::sleep_for(120ms);
-    }
+    // for (int i = 0;i < 20;i++)
+    // {
+    //     pool->push_task(func, i);
+    //     std::this_thread::sleep_for(120ms);
+    // }
 
     while (1) {};
     return 0;
