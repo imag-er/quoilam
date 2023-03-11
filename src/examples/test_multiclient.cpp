@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <vector>
 #include <iostream>
-
+#include "stdlogger.h"
 // #define DISABLE_COUT
 int main(int argc, char** argv)
 {
@@ -27,6 +27,8 @@ int main(int argc, char** argv)
     string teststr = "测试字符串";
     ThreadPool* pool = singleton<ThreadPool>::instance(count);
 
+
+    auto begin_time = chrono::steady_clock::now();
     for (int i = 0; i < count; i++)
     {
         Client c;
@@ -41,9 +43,6 @@ int main(int argc, char** argv)
             }
         );
     }
-
-    auto begin_time = chrono::steady_clock::now();
-    pool->run();
     while (pool->running_size() != 0)
     {
     };
@@ -61,7 +60,8 @@ int main(int argc, char** argv)
     {
         if (pool->running_size() == 0)
         {
-            cout << "所有线程都已退出" << endl;
+            
+            return 0;
         }
     };
     return 0;

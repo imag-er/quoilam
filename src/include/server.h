@@ -7,12 +7,12 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "stdlog.h"
+#include "stdlogger.h"
+#include "socket_base.h"
 namespace quoilam
 {
-    using Byte = char;
 
-    class Server
+    class Server: protected socket_base
     {
     public:
         Server();
@@ -27,7 +27,5 @@ namespace quoilam
 
     private:
         ThreadPool* tpool = nullptr;
-        int listen_socket;
-        stdlog* logger = nullptr;
     };
 };

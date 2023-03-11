@@ -12,12 +12,13 @@
 
 // 构造函数 初始化socket 线程池
 quoilam::Server::Server():
-    listen_socket(socket(AF_INET, SOCK_STREAM, 0)),
-    tpool(singleton<ThreadPool>::instance(16)),
-    logger(singleton_<stdlog>("server"))
+    quoilam::socket_base("server"),
+    tpool(singleton<ThreadPool>::instance(16))
 {
+
+    owned_socket = socket(AF_INET, SOCK_STREAM, 0);
     // 检查监听socket
-    if (listen_socket < 0)
+    if (owned_socket < 0)
     {
         logger->log("unable to listen port");
         return;
@@ -58,7 +59,7 @@ void quoilam::Server::listen(const std::string& ip, int port)
     server_addr->sin_port = htons(port);
 
     // bind到端口
-    int irtn = ::bind(listen_socket, (struct sockaddr*)server_addr, sizeof(*server_addr));
+    int irtn = ::bind(owned_socket, (struct sockaddr*)server_addr, sizeof(*server_addr));
     if (irtn < 0)
     {
         logger->log("unable to bind ip\t", irtn);
@@ -68,7 +69,7 @@ void quoilam::Server::listen(const std::string& ip, int port)
 
     // 监听端口
     delete server_addr;
-    irtn = ::listen(listen_socket, 64);
+    irtn = ::listen(owned_socket, 64);
     if (irtn < 0)
     {
         logger->log("unable to listen");
@@ -81,14 +82,13 @@ void quoilam::Server::listen(const std::string& ip, int port)
 
 void quoilam::Server::exec()
 {
-    tpool->run();
     while (1)
     {
         struct sockaddr_in client_addr;
         int client_socket, socklen = sizeof(client_addr);
 
         if ((client_socket =
-            accept(listen_socket,
+            accept(owned_socket,
                 (struct sockaddr*)&client_addr,
                 (socklen_t*)&socklen)) != -1)
         {
@@ -99,7 +99,7 @@ void quoilam::Server::exec()
 
 quoilam::Server::~Server()
 {
-    close(listen_socket);
+    close(owned_socket);
 }
 
 void quoilam::Server::listen_callback(int socket_)

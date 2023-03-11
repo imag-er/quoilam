@@ -1,10 +1,11 @@
 #pragma once
 #include <string>
-#include "stdlog.h"
+#include "stdlogger.h"
+#include "socket_base.h"
 namespace quoilam
 {
-    using Byte = char;
-    class Client
+
+    class Client: protected socket_base
     {
     public:
         Client();
@@ -18,9 +19,7 @@ namespace quoilam
         void recv_bytes(Byte* buffer, const uint32_t& nbytes);
         ~Client();
 
-    protected:
-        int connect_socket;
-        stdlog* logger = nullptr;
+
 
     };
 

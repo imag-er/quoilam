@@ -1,5 +1,6 @@
 #include "threadpool.h"
 #include "singleton.hpp"
+#include "stdlogger.h"
 #include <iostream>
 #include <chrono>
 #include <string>
@@ -41,14 +42,16 @@ int main()
 
     std::cout << rtn1 << '\t' << rtn2 << std::endl;
 
-    pool->run();
-    // for (int i = 0;i < 20;i++)
-    // {
-    //     pool->push_task(func, i);
-    //     std::this_thread::sleep_for(120ms);
-    // }
+    for (int i = 0;i < 20;i++)
+    {
+        pool->push_task(func, i);
+        std::this_thread::sleep_for(120ms);
+    }
 
-    while (1) {};
+    while (1)
+    {
+        quoilam::glog.log("123");
+    };
     return 0;
 
 }

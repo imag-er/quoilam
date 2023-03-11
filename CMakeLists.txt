@@ -16,7 +16,8 @@ set(quoilam_libs
     client
     quoilamtest
     threadpool
-    stdlog
+    stdlogger
+    socket_base
 )
 
 set(system_libs
@@ -29,7 +30,7 @@ set(example_executables
     test_server
     test_threadpool
     test_multiclient
-    test_stdlog
+    test_stdlogger
 )
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/executable)

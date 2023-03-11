@@ -7,7 +7,7 @@
 #include <condition_variable>
 #include <atomic>
 #include <type_traits>
-#include "stdlog.h"
+#include "stdlogger.h"
 namespace quoilam
 {
     class ThreadPool
@@ -28,8 +28,6 @@ namespace quoilam
         const uint32_t max_size() const { return max_thread_cnt; }
         const bool is_running() const { return running; }
 
-        void run();
-        void set_paused();
 
         template <class F, class... Args>
         auto push_task(F&& f, Args &&...args) -> std::future<decltype(f(args...))>;
@@ -38,8 +36,7 @@ namespace quoilam
         using task_t = std::function<void()>;
 
         const uint32_t max_thread_cnt;
-
-        std::atomic_bool being_paused;
+        
         std::atomic_bool running;
         std::atomic_uint32_t thread_cnt;
         std::queue<task_t> tasks;
@@ -49,7 +46,7 @@ namespace quoilam
         std::condition_variable cv;
         std::condition_variable cv_paused;
 
-        stdlog* logger = nullptr;
+        stdlogger* logger = nullptr;
     };
 
     template <class F, class... Args>
