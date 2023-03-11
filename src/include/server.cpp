@@ -17,22 +17,18 @@ quoilam::Server::Server():
 {
 
     owned_socket = socket(AF_INET, SOCK_STREAM, 0);
-    // 检查监听socket
     if (owned_socket < 0)
-    {
-        logger->log("unable to listen port");
-        return;
-    }
-
-    logger->log("successfully listening port");
+        handle_error("cannot create socket");
+    logger->log("successfully listen port");
 
     // 检查线程池
     if (tpool == nullptr)
     {
-        logger->log("server:thread pool initialization failed");
+        logger->log("thread pool initialization failed");
         return;
     }
     logger->log("thread pool successfully initialized");
+
 }
 
 void quoilam::Server::handle_socket(int client_socket, sockaddr_in s_info)
@@ -61,22 +57,18 @@ void quoilam::Server::listen(const std::string& ip, int port)
     // bind到端口
     int irtn = ::bind(owned_socket, (struct sockaddr*)server_addr, sizeof(*server_addr));
     if (irtn < 0)
-    {
-        logger->log("unable to bind ip\t", irtn);
-        return;
-    }
-    logger->log("successfully bind");
+        handle_error("unable to bind ip");
+
+    logger->log("successfully binded");
 
     // 监听端口
     delete server_addr;
     irtn = ::listen(owned_socket, 64);
     if (irtn < 0)
-    {
-        logger->log("unable to listen");
-        return;
-    }
-
+        handle_error("unable to listen");
     logger->log("listening");
+
+
 
 }
 
@@ -108,12 +100,12 @@ void quoilam::Server::listen_callback(int socket_)
     uint32_t recvstr_len;
     using namespace std::chrono_literals;
     int iret = ::recv(socket_, &recvstr_len, 4, MSG_WAITALL);
-    if (iret <= 0)
+    if (iret < 0)
     {
-        logger->log("receiving \"length_data\" failed\t", iret, "\terrno", errno);
+        logger->log("receiving lengthdata failed");
         return;
     }
-    logger->log(recvstr_len, " bytes to be receive");
+    logger->log("got length data:", recvstr_len);
 
     Byte* buf = new Byte[recvstr_len];
     ::recv(socket_, buf, recvstr_len, MSG_WAITALL);

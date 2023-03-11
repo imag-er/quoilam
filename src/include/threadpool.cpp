@@ -3,7 +3,7 @@
 quoilam::ThreadPool::ThreadPool(const uint32_t& thread_cnt_max):
     running(true),
     max_thread_cnt(thread_cnt_max),
-    logger(new stdlogger("threadpool"))
+    logger(std::make_shared<StdLogger>("threadpool"))
 {
 
     for (uint32_t i = 0; i < thread_cnt_max; ++i)

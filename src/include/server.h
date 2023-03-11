@@ -26,6 +26,6 @@ namespace quoilam
         void listen_callback(int socket_);
 
     private:
-        ThreadPool* tpool = nullptr;
+        std::shared_ptr<ThreadPool> tpool ;
     };
 };

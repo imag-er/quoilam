@@ -1,12 +1,13 @@
 #pragma once
 #include "inner_logger.hpp"
+#include <memory>
 namespace quoilam
 {
-    class stdlogger: private inner_logger
+    class StdLogger: private inner_logger
     {
 
     public:
-        stdlogger(const std::string& name, const char& separator = '\t');
+        StdLogger(const std::string& name, const char& separator = '\t');
 
         template <class... Args>
         void log(Args... args)
@@ -14,13 +15,13 @@ namespace quoilam
             std::cout << '[' << logger_name << ']';
             inner_log(args...);
         }
-    private:
+
+        using SharedPtr = std::shared_ptr<StdLogger>;
+
+    protected:
         const std::string logger_name;
         const char sep;
     };
 
-    static class glog
-    {
-
-    };
+    extern StdLogger glog;
 };

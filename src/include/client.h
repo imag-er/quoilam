@@ -10,16 +10,15 @@ namespace quoilam
     public:
         Client();
         void connect(const std::string& ip, int port);
+        void disconnect();
 
         const std::string send(const std::string& str);
 
-        void send_size(const uint32_t& size);
-        void send_bytes(const quoilam::Byte* data, const uint32_t& nbytes);
+        bool send_size(const uint32_t& size);
+        bool send_bytes(const quoilam::Byte* data, const uint32_t& nbytes);
         const uint32_t recv_size();
-        void recv_bytes(Byte* buffer, const uint32_t& nbytes);
+        bool recv_bytes(Byte* buffer, const uint32_t& nbytes);
         ~Client();
-
-
 
     };
 

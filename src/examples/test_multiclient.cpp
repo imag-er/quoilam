@@ -6,7 +6,7 @@
 #include <vector>
 #include <iostream>
 #include "stdlogger.h"
-// #define DISABLE_COUT
+#define DISABLE_COUT
 int main(int argc, char** argv)
 {
     using namespace std;
@@ -31,17 +31,18 @@ int main(int argc, char** argv)
     auto begin_time = chrono::steady_clock::now();
     for (int i = 0; i < count; i++)
     {
-        Client c;
-        c.connect("127.0.0.1", 25384);
-        vv.push_back(std::move(c));
+
+        vv.push_back(Client());
         pool->push_task(
-            // std::bind(&Client::send, &vv[i], std::placeholders::_1),
-            // teststr
-            [&]()
+            [&m](Client c, const std::string str)
             {
-                cout << "<<" << c.send(teststr) << ">>";
-            }
-        );
+                m.lock();
+                c.connect("127.0.0.1", 25384);
+                glog.log(c.send(str));
+                m.unlock();
+            },
+            vv.back(), teststr
+                );
     }
     while (pool->running_size() != 0)
     {
@@ -49,20 +50,15 @@ int main(int argc, char** argv)
     auto end_time = chrono::steady_clock::now();
 
     auto dtime = end_time - begin_time;
+
+
+    delete pool;
+    vv.clear();
 #ifdef DISABLE_COUT
     cout.rdbuf(buf);
 #endif
-    printf("本次测试%u客户端并发\t包内容:\"%s\"\t包大小:%lu\n共用时%ldus.\n",
+    printf("本次测试%u客户端并发\t包内容:\"%s\"\t包大小:%lu\n共用时%fms.\n",
         count, teststr.c_str(), sizeof(teststr),
-        chrono::duration_cast<chrono::microseconds>(dtime).count());
-
-    while (1)
-    {
-        if (pool->running_size() == 0)
-        {
-            
-            return 0;
-        }
-    };
+        std::chrono::duration<double, std::milli>(dtime).count());
     return 0;
 }

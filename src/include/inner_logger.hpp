@@ -5,7 +5,7 @@ namespace quoilam
 {
     class inner_logger
     {
-    public:
+    protected:
         template<class First>
         static void inner_log(First&& first);
 

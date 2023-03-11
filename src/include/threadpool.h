@@ -36,7 +36,7 @@ namespace quoilam
         using task_t = std::function<void()>;
 
         const uint32_t max_thread_cnt;
-        
+
         std::atomic_bool running;
         std::atomic_uint32_t thread_cnt;
         std::queue<task_t> tasks;
@@ -44,9 +44,8 @@ namespace quoilam
         std::vector<std::thread> worker_threads;
 
         std::condition_variable cv;
-        std::condition_variable cv_paused;
 
-        stdlogger* logger = nullptr;
+        StdLogger::SharedPtr logger = nullptr;
     };
 
     template <class F, class... Args>
@@ -56,7 +55,8 @@ namespace quoilam
         using pkg_task_t = std::packaged_task<return_t()>;
 
         auto task_ptr = std::make_shared<pkg_task_t>(
-            std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+            std::bind(std::forward<F>(f), std::forward<Args>(args)...)
+        );
         {
             // lock_guard对当前块加锁 所以这里有一对奇怪的括弧
             std::lock_guard<std::mutex> queue_lock{lock};

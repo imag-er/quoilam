@@ -14,7 +14,6 @@ include_directories(src/include/)
 set(quoilam_libs
     server
     client
-    quoilamtest
     threadpool
     stdlogger
     socket_base
@@ -25,7 +24,6 @@ set(system_libs
 )
 
 set(example_executables
-    test_exec
     test_client
     test_server
     test_threadpool
@@ -42,6 +40,7 @@ foreach(lib_name ${quoilam_libs})
         STATIC
         ${PROJECT_SOURCE_DIR}/src/include/${lib_name}.h
         ${PROJECT_SOURCE_DIR}/src/include/${lib_name}.cpp
+        ${PROJECT_SOURCE_DIR}/src/include/stdlogger.cpp
     )
 endforeach(lib_name)
 

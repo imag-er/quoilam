@@ -10,7 +10,7 @@ int main(int, char**)
 
     std::string result = c.send("661231236");
 
-    std::cout << "result: " << result << std::endl;
+    glog.log("result:", result);
 
     return 0;
 }
