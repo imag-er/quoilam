@@ -19,5 +19,8 @@ namespace quoilam
         const char sep;
     };
 
-    extern stdlogger glog;
+    static class glog
+    {
+
+    };
 };
