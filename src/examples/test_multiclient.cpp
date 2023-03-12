@@ -1,11 +1,11 @@
-#include "threadpool.h"
-#include "client.h"
+#include "ThreadPool.h"
+#include "Client.h"
 #include <string>
-#include "singleton.hpp"
+#include "Singleton.hpp"
 #include <cstdint>
 #include <vector>
 #include <iostream>
-#include "stdlogger.h"
+#include "StdLogger.h"
 #define DISABLE_COUT
 int main(int argc, char** argv)
 {
@@ -27,18 +27,23 @@ int main(int argc, char** argv)
     string teststr = "测试字符串";
     ThreadPool* pool = singleton<ThreadPool>::instance(count);
 
+    double time_sum = 0.0;
 
-    auto begin_time = chrono::steady_clock::now();
     for (int i = 0; i < count; i++)
     {
 
         vv.push_back(Client());
         pool->push_task(
-            [&m](Client c, const std::string str)
+            [&](Client c, const std::string str)
             {
                 m.lock();
                 c.connect("127.0.0.1", 25384);
+
+                auto begin_time = chrono::steady_clock::now();
                 glog.log(c.send(str));
+                auto end_time = chrono::steady_clock::now();
+
+                time_sum += std::chrono::duration<double, std::milli>(end_time - begin_time).count();
                 m.unlock();
             },
             vv.back(), teststr
@@ -47,9 +52,6 @@ int main(int argc, char** argv)
     while (pool->running_size() != 0)
     {
     };
-    auto end_time = chrono::steady_clock::now();
-
-    auto dtime = end_time - begin_time;
 
 
     delete pool;
@@ -57,8 +59,8 @@ int main(int argc, char** argv)
 #ifdef DISABLE_COUT
     cout.rdbuf(buf);
 #endif
-    printf("本次测试%u客户端并发\t包内容:\"%s\"\t包大小:%lu\n共用时%fms.\n",
+    printf("本次测试%u客户端并发\n包内容:\"%s\"\n包大小:%lu\n共用时%fms.\n",
         count, teststr.c_str(), sizeof(teststr),
-        std::chrono::duration<double, std::milli>(dtime).count());
+        time_sum);
     return 0;
 }

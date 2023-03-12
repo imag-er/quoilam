@@ -1,5 +1,5 @@
-#include "server.h"
-#include "singleton.hpp"
+#include "Server.h"
+#include "Singleton.hpp"
 
 int main()
 {

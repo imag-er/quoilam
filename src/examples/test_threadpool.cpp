@@ -1,6 +1,6 @@
-#include "threadpool.h"
-#include "singleton.hpp"
-#include "stdlogger.h"
+#include "ThreadPool.h"
+#include "Singleton.hpp"
+#include "StdLogger.h"
 #include <iostream>
 #include <chrono>
 #include <string>
