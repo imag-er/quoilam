@@ -1,6 +1,7 @@
 #include <chrono>
 #include <future>
 #include <functional>
+#include <thread>
 namespace quoilam
 {
 
@@ -9,19 +10,29 @@ namespace quoilam
     public:
         Timer();
 
+        class Interval
+        {
+        public:
+            Interval(std::thread& func);
+            std::thread::id id;
+            void kill();
+        protected:
+            pthread_t native_handle;
+        };
+
         template < class Func, class... Argu>
         auto timeout(
             Func&& f,
-            std::chrono::duration<uint32_t, std::milli>&& period,
+            std::chrono::duration<uint32_t, std::milli> period,
             Argu&&... argus
         ) -> decltype(f(argus...));
 
-        // template < class Func, class... Argu>
-        // auto async(
-        //     Func&& f,
-        //     Argu&&... argus
-        // ) -> std::future<decltype(f(argus...))>;
-
+        template < class Func, class... Argu>
+        Interval interval(
+            Func&& f,
+            std::chrono::duration<uint32_t, std::milli> claps,
+            Argu&&... argus
+        );
     private:
 
     protected:
@@ -30,7 +41,7 @@ namespace quoilam
     template < class Func, class... Argu>
     auto Timer::timeout(
         Func&& f,
-        std::chrono::duration<uint32_t, std::milli>&& period,
+        std::chrono::duration<uint32_t, std::milli> period,
         Argu&&... argus
     ) -> decltype(f(argus...))
     {
@@ -40,22 +51,23 @@ namespace quoilam
     }
 
 
-    // template < class Func, class... Argu>
-    // auto Timer::async(
-    //     Func&& f,
-    //     Argu&&... argus
-    // ) -> std::future<decltype(f(argus...))>
-    // {
-    //     // 这里打包了f(args...)并且把它作为函数返回值
-    //     using task_type = std::packaged_task<decltype(f(argus...))(void)>;
-
-    //     auto async_task = std::make_shared<task_type>(
-    //         std::bind(std::forward<Func>(f), std::forward<Argu>(argus)...)
-    //     );
-
-    //     return async_task->get_future();
-    // }
-
+    template < class Func, class... Argu>
+    Timer::Interval Timer::interval(
+        Func&& f,
+        std::chrono::duration<uint32_t, std::milli> claps,
+        Argu&&... argus
+    )
+    {
+        // 这里不用线程池是因为Timer非单例 线程池管理不方便
+        // 而且并没有高频率的创建/销毁 对性能要求并不高
+        auto ff = [&]()
+        {
+            while (1)
+                timeout(f, claps, argus...);
+        };
+        std::thread t(ff);
+        Interval v(t);
+        t.detach();
+        return v;
+    }
 };
-
-

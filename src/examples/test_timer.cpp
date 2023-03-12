@@ -10,13 +10,16 @@ int main()
     using namespace std::chrono_literals;
 
     Timer t;
-    auto res = t.async(f, 300, 4000).get();
-    std::cout << res;
-    while (1)
-    {
-        std::cout << '\r' << 1;
 
-        // if (res.valid()) std::cout << res.get();
-    }
+    t.interval([]() {
+        std::cout << 111 << std::endl;
+        }, 1s);
+    t.interval([]() {
+        std::cout << 222 << std::endl;
+        }, 1s);
+    // t.timeout([]() {
+    //     std::cout << 333 << std::endl;
+    //     }, 5s);
+    while (1) {}
     return 0;
 }

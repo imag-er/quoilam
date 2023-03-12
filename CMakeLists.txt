@@ -26,6 +26,7 @@ set(example_executables
     test_threadpool
     test_multiclient
     test_stdlogger
+    test_timer
 )
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/executable)
@@ -44,7 +45,6 @@ endforeach()
 target_link_libraries(ThreadPool
     pthread
     StdLogger
-
 )
 target_link_libraries(Client
     SocketBase
@@ -54,7 +54,9 @@ target_link_libraries(Server
     SocketBase
     ThreadPool
     StdLogger
-
+)
+target_link_libraries(Timer
+    pthread
 )
 
 # test_executables
