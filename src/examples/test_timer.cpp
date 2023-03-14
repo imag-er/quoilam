@@ -17,9 +17,11 @@ int main()
     t.interval([]() {
         std::cout << 222 << std::endl;
         }, 1s);
-    // t.timeout([]() {
-    //     std::cout << 333 << std::endl;
-    //     }, 5s);
-    while (1) {}
+    t.timeout([]() {
+        std::cout << 333 << std::endl;
+        }, 5s);
+    glog.log("all detached");
+    while (1) {
+    }
     return 0;
 }

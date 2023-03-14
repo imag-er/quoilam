@@ -57,6 +57,7 @@ target_link_libraries(Server
 )
 target_link_libraries(Timer
     pthread
+    StdLogger
 )
 
 # test_executables
