@@ -110,6 +110,36 @@ add_executable(test_timer
 target_link_libraries(test_timer
     Timer
 )
+
+# 循环遍历库列表
+foreach(lib ${quoilam_libs})
+    # 设置安装路径
+    install(TARGETS ${lib}
+        EXPORT ${lib}Targets
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION bin
+        INCLUDES DESTINATION include
+    )
+
+    install(DIRECTORY ${lib}/include/ DESTINATION include/${lib})
+
+    install(EXPORT ${lib}Targets
+        FILE ${lib}Targets.cmake
+        NAMESPACE ${lib}::
+        DESTINATION lib/cmake/${lib}
+    )
+
+    # 生成配置文件
+    include(CMakePackageConfigHelpers)
+    configure_package_config_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/build/library/${lib}/cmake/${lib}Config.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/${lib}Config.cmake
+        INSTALL_DESTINATION lib/cmake/${lib}
+    )
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${lib}Config.cmake DESTINATION lib/cmake/${lib})
+endforeach()
+
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 
