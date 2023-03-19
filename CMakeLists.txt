@@ -111,9 +111,12 @@ target_link_libraries(test_httpserver
     HttpServer
 )
 
-install(TARGETS ${quoilam_libs} 
+install(TARGETS ${quoilam_libs}
     ARCHIVE DESTINATION lib
 )
+
+install(FILES ${quoilam_headers}
+    DESTINATION /usr/include/quoilam)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

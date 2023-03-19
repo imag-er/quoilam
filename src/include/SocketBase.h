@@ -1,24 +1,23 @@
 #pragma once
+#include "StdLogger.h"
+#include <arpa/inet.h>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <memory>
+#include <netinet/in.h>
 #include <string>
 #include <sys/fcntl.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <iostream>
-#include <string>
-#include <cstdlib>
-#include <cstring>
-#include "StdLogger.h"
-#include <memory>
 
 namespace quoilam
 {
     class SocketBase
     {
     public:
-        SocketBase(const std::string& name);
+        SocketBase(const std::string &name);
 
     protected:
         int owned_socket;
@@ -26,7 +25,7 @@ namespace quoilam
 
         StdLogger::SharedPtr logger;
 
-        void handle_error(const std::string& msg);
+        void handle_error(const std::string &msg);
 
     private:
     };
