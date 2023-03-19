@@ -54,7 +54,7 @@ namespace quoilam
         if (!res) return "";
 
         // 发送字节数据
-        send_bytes((char32_t*)&str, str.length());
+        send_bytes((Byte*)&str, str.length());
         if (!res) return "";
 
         // 接受长度数据

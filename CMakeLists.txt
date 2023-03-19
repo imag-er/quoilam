@@ -3,6 +3,7 @@ project(quoilam VERSION 0.3.4)
 
 # Enable C++17
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_INSTALL_PREFIX /usr/include/quoilam)
 
 include(CTest)
 enable_testing()
@@ -17,16 +18,16 @@ set(quoilam_libs
     ThreadPool
     StdLogger
     SocketBase
-    Timer
+    HttpServer
 )
-
+file(GLOB quoilam_headers "${CMAKE_SOURCE_DIR}/src/include/*.h*")
 set(example_executables
     test_client
     test_server
     test_threadpool
     test_multiclient
     test_stdlogger
-    test_timer
+    test_httpserver
 )
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/executable)
@@ -55,9 +56,8 @@ target_link_libraries(Server
     ThreadPool
     StdLogger
 )
-target_link_libraries(Timer
-    pthread
-    StdLogger
+target_link_libraries(HttpServer
+    Server
 )
 
 # test_executables
@@ -103,42 +103,17 @@ target_link_libraries(test_threadpool
     ThreadPool
 )
 
-# ThreadPool
-add_executable(test_timer
-    ${PROJECT_SOURCE_DIR}/src/examples/test_timer.cpp
+# HttpServer
+add_executable(test_httpserver
+    ${PROJECT_SOURCE_DIR}/src/examples/test_httpserver.cpp
 )
-target_link_libraries(test_timer
-    Timer
+target_link_libraries(test_httpserver
+    HttpServer
 )
 
-# 循环遍历库列表
-foreach(lib ${quoilam_libs})
-    # 设置安装路径
-    install(TARGETS ${lib}
-        EXPORT ${lib}Targets
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
-        RUNTIME DESTINATION bin
-        INCLUDES DESTINATION include
-    )
-
-    install(DIRECTORY ${lib}/include/ DESTINATION include/${lib})
-
-    install(EXPORT ${lib}Targets
-        FILE ${lib}Targets.cmake
-        NAMESPACE ${lib}::
-        DESTINATION lib/cmake/${lib}
-    )
-
-    # 生成配置文件
-    include(CMakePackageConfigHelpers)
-    configure_package_config_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/build/library/${lib}/cmake/${lib}Config.cmake.in
-        ${CMAKE_CURRENT_BINARY_DIR}/${lib}Config.cmake
-        INSTALL_DESTINATION lib/cmake/${lib}
-    )
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${lib}Config.cmake DESTINATION lib/cmake/${lib})
-endforeach()
+install(TARGETS ${quoilam_libs} 
+    ARCHIVE DESTINATION lib
+)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

@@ -31,7 +31,7 @@ namespace quoilam
     private:
     };
 
-    using Byte = char32_t;
+    using Byte = char;
     using Uint = uint32_t;
 
 }

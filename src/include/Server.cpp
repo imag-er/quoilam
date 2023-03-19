@@ -11,9 +11,10 @@
 #include "Singleton.hpp"
 
 // 构造函数 初始化socket 线程池
-quoilam::Server::Server():
+quoilam::Server::Server(const Options& option):
     quoilam::SocketBase("server"),
-    tpool(singleton<ThreadPool>::instance(16))
+    tpool(singleton<ThreadPool>::instance(16)),
+    opt(option)
 {
 
     owned_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -31,7 +32,7 @@ quoilam::Server::Server():
 
 }
 
-void quoilam::Server::handle_socket(int client_socket, sockaddr_in s_info)
+void quoilam::Server::handle_quoilam_socket(int client_socket, sockaddr_in s_info)
 {
     int flags = fcntl(client_socket, F_GETFL, 0);
     fcntl(client_socket, F_SETFL, flags & ~O_NONBLOCK);
@@ -40,10 +41,7 @@ void quoilam::Server::handle_socket(int client_socket, sockaddr_in s_info)
         std::bind(&Server::listen_callback, this, std::placeholders::_1),
         client_socket);
 
-    logger->log("socket_id:", client_socket,
-        "\tip:", inet_ntoa(s_info.sin_addr),
-        "\tport:", s_info.sin_port
-    );
+
 }
 
 // 监听端口
@@ -57,7 +55,10 @@ void quoilam::Server::listen(const std::string& ip, int port)
     // bind到端口
     int irtn = ::bind(owned_socket, (struct sockaddr*)server_addr, sizeof(*server_addr));
     if (irtn < 0)
+    {
         handle_error("unable to bind ip");
+        return;
+    }
 
     logger->log("successfully binded");
 
@@ -65,7 +66,10 @@ void quoilam::Server::listen(const std::string& ip, int port)
     delete server_addr;
     irtn = ::listen(owned_socket, 64);
     if (irtn < 0)
+    {
         handle_error("unable to listen");
+        return;
+    }
     logger->log("listening");
 
 
@@ -84,7 +88,17 @@ void quoilam::Server::exec()
                 (struct sockaddr*)&client_addr,
                 (socklen_t*)&socklen)) != -1)
         {
-            handle_socket(client_socket, client_addr);
+
+            logger->log("socket_id:", client_socket,
+                "\tip: ", inet_ntoa(client_addr.sin_addr),
+                "\tport: ", client_addr.sin_port,
+                "\tcurrent threadpool size: ", tpool->running_size()
+            );
+
+            if (opt.custom)
+                handle_custom(client_socket, client_addr);
+            else
+                handle_quoilam_socket(client_socket, client_addr);
         }
     }
 }
