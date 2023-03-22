@@ -19,6 +19,7 @@ set(quoilam_libs
     StdLogger
     SocketBase
     HttpServer
+    Database
 )
 file(GLOB quoilam_headers "${CMAKE_SOURCE_DIR}/src/include/*.h*")
 set(example_executables
@@ -28,6 +29,7 @@ set(example_executables
     test_multiclient
     test_stdlogger
     test_httpserver
+    test_database
 )
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/executable)
@@ -42,7 +44,7 @@ foreach(lib_name ${quoilam_libs})
     )
 endforeach()
 
-# link_libraries(${quoilam_libs} ${system_libs})
+# link_libraries
 target_link_libraries(ThreadPool
     pthread
     StdLogger
@@ -58,6 +60,10 @@ target_link_libraries(Server
 )
 target_link_libraries(HttpServer
     Server
+)
+target_link_libraries(Database
+    StdLogger
+    sqlite3
 )
 
 # test_executables
@@ -110,6 +116,14 @@ add_executable(test_httpserver
 target_link_libraries(test_httpserver
     HttpServer
 )
+
+add_executable(test_database
+    ${PROJECT_SOURCE_DIR}/src/examples/test_database.cpp
+)
+target_link_libraries(test_database
+    Database
+)
+
 
 install(TARGETS ${quoilam_libs}
     ARCHIVE DESTINATION lib

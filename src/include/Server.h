@@ -48,9 +48,12 @@ namespace quoilam
 
         std::shared_ptr<ThreadPool> tpool;
 
+        std::vector<int> client_sockets;
+
+
     private:
         // 选项
         Options opt;
-        // 线程池
+        
     };
 };

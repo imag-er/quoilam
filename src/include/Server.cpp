@@ -106,6 +106,14 @@ void quoilam::Server::exec()
 quoilam::Server::~Server()
 {
     close(owned_socket);
+    tpool->~ThreadPool();
+
+    auto it = client_sockets.begin();
+    while (it != client_sockets.end())
+    {
+        close(*it);
+        client_sockets.erase(it);
+    }
 }
 
 void quoilam::Server::listen_callback(int socket_)
