@@ -1,2 +1,0 @@
-killall test_server
-killall test_client

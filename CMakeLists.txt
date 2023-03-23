@@ -20,6 +20,7 @@ set(quoilam_libs
     SocketBase
     HttpServer
     Database
+    Typedef
 )
 file(GLOB quoilam_headers "${CMAKE_SOURCE_DIR}/src/include/*.h*")
 set(example_executables
@@ -64,6 +65,7 @@ target_link_libraries(HttpServer
 target_link_libraries(Database
     StdLogger
     sqlite3
+    Typedef
 )
 
 # test_executables

@@ -11,7 +11,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-
+#include "Typedef.h"
 namespace quoilam
 {
     class SocketBase
@@ -30,7 +30,6 @@ namespace quoilam
     private:
     };
 
-    using Byte = char;
-    using Uint = uint32_t;
+
 
 }

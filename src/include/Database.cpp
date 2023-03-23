@@ -1,17 +1,30 @@
 #include "Database.h"
+
 #include <sstream>
 #include <cstring>
 namespace quoilam
 {
 
-    Database::Database(const std::string &path)
+    Database::Database(const std::string &path, int open_flags)
         : logger(new StdLogger("database"))
     {
-
-        int res = sqlite3_open(path.c_str(), &pDB);
-        if (res)
+        int flags = 0;
+        if (open_flags & io::read)
+            flags |= SQLITE_OPEN_READONLY;
+        if (open_flags & io::readwrite)
+            flags |= SQLITE_OPEN_READWRITE;
+        if (open_flags & io::app)
+            flags |= SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE;
+        logger->log(flags);
+        if (open_flags & io::ate)
         {
-            logger->log("read error");
+            // TODO: wait for filesystem succeed
+        }
+        
+        int res = sqlite3_open_v2(path.c_str(), &pDB, flags, nullptr);
+        if (res != SQLITE_OK)
+        {
+            logger->log("read table failed. err:", res);
             return;
         }
 
@@ -67,21 +80,40 @@ namespace quoilam
             return;
         }
     }
-    void Database::insert_values(const Table &values)
+    void Database::insert_values(const StrTable &values)
     {
         for (const StrList &line : values)
-        {
             insert_value(line);
-        }
     }
 
-    Database::Query Database::select(const std::string &cmd)
+    const std::tuple<StrList, StrTable> Database::select(const std::string &cmd) const
     {
-        char** presult;
-        char* errmsg;
-        int row,col;
-        sqlite3_get_table(pDB,cmd.c_str(),&presult,&row,&col,&errmsg);
-        return Query();
+        char **presult;
+        char *errmsg;
+        int row, col;
+
+        int res = sqlite3_get_table(pDB, cmd.c_str(), &presult, &row, &col, &errmsg);
+        if (res != SQLITE_OK)
+        {
+            logger->log("cannot read table");
+            return {};
+        }
+        logger->log(row, 'x', col);
+
+        StrList colname;
+
+        StrTable rettable(row + 1);
+
+        for (int i = 0; i <= col - 1; ++i)
+            colname.push_back(presult[i]);
+        logger->log(1);
+
+
+        for (int i = col; i < col * row + col; ++i)
+            rettable[i / col].push_back(presult[i]);
+
+        sqlite3_free_table(presult);
+        return std::make_tuple(colname, rettable);
     }
     std::string Database::make_string_list(
         const StrList &cols)

@@ -1,19 +1,21 @@
 #include <sqlite3.h>
 #include <string>
-#include <initializer_list>
+#include <vector>
 #include <memory>
+#include <tuple>
 #include "StdLogger.h"
+#include "Typedef.h"
 namespace quoilam
 {
-    using StrList = std::initializer_list<std::string>;
-    using Table = std::initializer_list<StrList>;
-    
+    using StrList = std::vector<std::string>;
+    using StrTable = std::vector<StrList>;
+
     class Database
     {
     public:
-        class Query;
+      
 
-        Database(const std::string &path);
+        Database(const std::string &path,int io_flags = io::read);
         ~Database();
 
         void create_table(const std::string &table_name,
@@ -22,9 +24,9 @@ namespace quoilam
         void switch_table(const std::string &table_name);
 
         void insert_value(const StrList& value);
-        void insert_values(const Table &values);
+        void insert_values(const StrTable &values);
 
-        Query select(const std::string &cmd);
+        const std::tuple<StrList,StrTable> select(const std::string &cmd) const;
 
     protected:
         std::string dbpath;
@@ -36,11 +38,6 @@ namespace quoilam
         std::string make_string_list(const StrList &cols);
     };
 
-    class Database::Query
-    {
-    public:
-        void *placeholder;
-    };
 
 
 }

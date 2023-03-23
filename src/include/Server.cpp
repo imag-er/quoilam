@@ -9,7 +9,7 @@
 #include <thread>
 #include <chrono>
 #include "Singleton.hpp"
-
+#include "Typedef.h"
 // 构造函数 初始化socket 线程池
 quoilam::Server::Server(const Options& option):
     quoilam::SocketBase("server"),
