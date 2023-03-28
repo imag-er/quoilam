@@ -2,7 +2,8 @@
 
 namespace quoilam
 {
-    HttpServer::HttpServer(std::string ip, Uint port) : Server(Options{true})
+    HttpServer::HttpServer(std::string ip, Uint port)
+        : Server(Options(Options::ProtoType::custom,true))
     {
         Server::listen(ip, port);
     }
@@ -27,12 +28,13 @@ namespace quoilam
             ssize_t count = recv(client_socket, buffer, buf_size, 0);
             if (count > 0)
             {
-                std::cout << buffer << "\n-----------------------";
+                std::cout << buffer << "\n-----------------------" << std::endl;
                 std::string resp = process(buffer);
                 send(client_socket, resp.c_str(), resp.size(), 0);
                 break;
             }
         }
+        close(client_socket);
     }
 
 }

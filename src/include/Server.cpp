@@ -11,25 +11,42 @@
 #include "Singleton.hpp"
 #include "Typedef.h"
 // 构造函数 初始化socket 线程池
-quoilam::Server::Server(const Options& option):
-    quoilam::SocketBase("server"),
-    tpool(singleton<ThreadPool>::instance(16)),
-    opt(option)
+quoilam::Server::Server(const Options &option)
+    : quoilam::SocketBase("server"),
+      tpool(singleton<ThreadPool>::instance(16)),
+      opt(option)
 {
-
+    // 初始化socket
     owned_socket = socket(AF_INET, SOCK_STREAM, 0);
     if (owned_socket < 0)
+    {
         handle_error("cannot create socket");
+        close(owned_socket);
+        return;
+    }
     logger->log("successfully listen port");
+
+    // 设置端口复用
+    if (opt.reuse_port)
+    {
+        int optval = 1;
+        int res = setsockopt(owned_socket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
+        if (res < 0)
+        {
+            handle_error("unable to set port reuse");
+            close(owned_socket);
+            return;
+        }
+    }
 
     // 检查线程池
     if (tpool == nullptr)
     {
         logger->log("thread pool initialization failed");
+        close(owned_socket);
         return;
     }
     logger->log("thread pool successfully initialized");
-
 }
 
 void quoilam::Server::handle_quoilam_socket(int client_socket, sockaddr_in s_info)
@@ -38,22 +55,20 @@ void quoilam::Server::handle_quoilam_socket(int client_socket, sockaddr_in s_inf
     fcntl(client_socket, F_SETFL, flags & ~O_NONBLOCK);
 
     tpool->push_task(
-        std::bind(&Server::listen_callback, this, std::placeholders::_1),
+        std::bind(&Server::quoilam_callback, this, std::placeholders::_1),
         client_socket);
-
-
 }
 
 // 监听端口
-void quoilam::Server::listen(const std::string& ip, int port)
+void quoilam::Server::listen(const std::string &ip, int port)
 {
-    struct sockaddr_in* server_addr = new sockaddr_in;
+    struct sockaddr_in *server_addr = new sockaddr_in;
     server_addr->sin_family = AF_INET;
     server_addr->sin_addr.s_addr = inet_addr(ip.c_str());
     server_addr->sin_port = htons(port);
 
     // bind到端口
-    int irtn = ::bind(owned_socket, (struct sockaddr*)server_addr, sizeof(*server_addr));
+    int irtn = ::bind(owned_socket, (struct sockaddr *)server_addr, sizeof(*server_addr));
     if (irtn < 0)
     {
         handle_error("unable to bind ip");
@@ -71,9 +86,6 @@ void quoilam::Server::listen(const std::string& ip, int port)
         return;
     }
     logger->log("listening");
-
-
-
 }
 
 void quoilam::Server::exec()
@@ -84,20 +96,19 @@ void quoilam::Server::exec()
         int client_socket, socklen = sizeof(client_addr);
 
         if ((client_socket =
-            accept(owned_socket,
-                (struct sockaddr*)&client_addr,
-                (socklen_t*)&socklen)) != -1)
+                 accept(owned_socket,
+                        (struct sockaddr *)&client_addr,
+                        (socklen_t *)&socklen)) != -1)
         {
 
             logger->log("socket_id:", client_socket,
-                "\tip: ", inet_ntoa(client_addr.sin_addr),
-                "\tport: ", client_addr.sin_port,
-                "\tcurrent threadpool size: ", tpool->running_size()
-            );
+                        "\tip: ", inet_ntoa(client_addr.sin_addr),
+                        "\tport: ", client_addr.sin_port,
+                        "\tcurrent threadpool size: ", tpool->running_size());
 
-            if (opt.custom)
+            if (opt.protocol == Options::ProtoType::custom)
                 handle_custom(client_socket, client_addr);
-            else
+            else if (opt.protocol == Options::ProtoType::quoilam_socket)
                 handle_quoilam_socket(client_socket, client_addr);
         }
     }
@@ -116,7 +127,7 @@ quoilam::Server::~Server()
     }
 }
 
-void quoilam::Server::listen_callback(int socket_)
+void quoilam::Server::quoilam_callback(int socket_)
 {
     logger->log("socket_id:", socket_, "\t thread started");
     uint32_t recvstr_len;
@@ -129,7 +140,7 @@ void quoilam::Server::listen_callback(int socket_)
     }
     logger->log("got length data:", recvstr_len);
 
-    Byte* buf = new Byte[recvstr_len];
+    Byte *buf = new Byte[recvstr_len];
     ::recv(socket_, buf, recvstr_len, MSG_WAITALL);
     logger->log("received:\t", buf);
 
@@ -138,9 +149,11 @@ void quoilam::Server::listen_callback(int socket_)
     // Byte *response_buffer = new Byte[recvstr_len]{0};
 
     // byte_explain(buf, response_buffer, recvstr_len);
-    logger->log("processed message[20:]:", buf + 20);
+    logger->log("processed message:", buf );
     ::send(socket_, &sendstr_len, 4, 0);
     ::send(socket_, buf, sendstr_len, 0);
 
     delete[] buf;
+
+    close(socket_);
 }

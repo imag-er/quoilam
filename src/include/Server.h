@@ -20,11 +20,24 @@ namespace quoilam
         class Options
         {
         public:
-            bool custom = false;
+            enum class ProtoType
+            {
+                quoilam_socket = 0,
+                custom,
+            };
+            ProtoType protocol;
+            bool reuse_port;
+            Options(
+                const ProtoType &protocol_ = Options::ProtoType::quoilam_socket,
+                const bool &reuse_port_ = true)
+                : protocol(protocol_),
+                  reuse_port(reuse_port_)
+            {
+            }
         };
 
         // 构造函数
-        Server(const Options &option = Options{false});
+        Server(const Options &option = Options());
 
         // 设置监听
         void listen(const std::string &ip, int port);
@@ -45,16 +58,19 @@ namespace quoilam
             sockaddr_in s_info){};
 
         // 处理quoilam_socket的回调
-        void listen_callback(int socket_);
+        void quoilam_callback(int socket_);
+
+        void release_socket(int socket_);
 
         std::shared_ptr<ThreadPool> tpool;
 
         std::vector<int> client_sockets;
 
+        // 地址链接数统计 纺织数据错误接收
+        Uint addr_used = 0;
 
     private:
         // 选项
         Options opt;
-        
     };
 };
