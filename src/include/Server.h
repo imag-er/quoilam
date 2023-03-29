@@ -22,7 +22,8 @@ namespace quoilam
         public:
             enum class ProtoType
             {
-                quoilam_socket = 0,
+                default_socket = 0,
+                quoilam_socket,
                 custom,
             };
             ProtoType protocol;
@@ -52,6 +53,9 @@ namespace quoilam
         // 处理quoilam_socket通信
         void handle_quoilam_socket(int client_socket, sockaddr_in s_info);
 
+        // 处理默认socket
+        void handle_default_socket(int client_socket, sockaddr_in s_info);
+
         // 自定义消息处理 （为http rpc做准备）
         virtual void handle_custom(
             int client_socket,
@@ -59,15 +63,13 @@ namespace quoilam
 
         // 处理quoilam_socket的回调
         void quoilam_callback(int socket_);
+        void default_callback(int socket_);
 
-        void release_socket(int socket_);
 
         std::shared_ptr<ThreadPool> tpool;
 
         std::vector<int> client_sockets;
 
-        // 地址链接数统计 纺织数据错误接收
-        Uint addr_used = 0;
 
     private:
         // 选项

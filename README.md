@@ -1,14 +1,16 @@
 # quoilam
+![](icon.png)
+
 ## Introduction
 Determined to build a c++ library like yazi.  
 Containing threadpool socket async and other modules.
 ## Containing (increasing)
-server & client (now available but still improving)
+server & client (still improving)
 singleton 
 httpserver
 stdlogger
 database
-threadpool (unfinished)
+threadpool 
 ## How to build
 ```shell
     git clone git@github.com:imag-er/quoilam.git
@@ -28,10 +30,9 @@ target_link_libraries(your_target_name PRIVATE
     StdLogger
     ...
 )
-
-
 ```
-
+## Modules
+-> [Modules](MODULE.md)
 
 ## tips
 the name, quoilam, is a mixture of french and my dialect,originates from my nickname while in high school

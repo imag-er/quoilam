@@ -22,6 +22,7 @@ int main()
     glog.log("values inserted");
 
     auto [col, content] = q.select("SELECT * FROM newtable");
+    
     for (auto name : col)
         std::cout << name << ' ';
 

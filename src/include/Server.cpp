@@ -51,11 +51,19 @@ quoilam::Server::Server(const Options &option)
 
 void quoilam::Server::handle_quoilam_socket(int client_socket, sockaddr_in s_info)
 {
+    // 设置阻塞
     int flags = fcntl(client_socket, F_GETFL, 0);
     fcntl(client_socket, F_SETFL, flags & ~O_NONBLOCK);
 
     tpool->push_task(
         std::bind(&Server::quoilam_callback, this, std::placeholders::_1),
+        client_socket);
+}
+
+void quoilam::Server::handle_default_socket(int client_socket, sockaddr_in s_info)
+{
+    tpool->push_task(
+        std::bind(&Server::default_callback, this, std::placeholders::_1),
         client_socket);
 }
 
@@ -149,9 +157,24 @@ void quoilam::Server::quoilam_callback(int socket_)
     // Byte *response_buffer = new Byte[recvstr_len]{0};
 
     // byte_explain(buf, response_buffer, recvstr_len);
-    logger->log("processed message:", buf );
+    logger->log("processed message:", buf);
     ::send(socket_, &sendstr_len, 4, 0);
     ::send(socket_, buf, sendstr_len, 0);
+
+    delete[] buf;
+
+    close(socket_);
+}
+void quoilam::Server::default_callback(int socket_)
+{
+    logger->log("socket_id:", socket_, "\t thread started");
+
+    Byte *buf = new Byte[2048];
+    ::recv(socket_, buf, 2048, 0);
+    logger->log("received:\t", buf);
+
+    logger->log("processed message:", buf);
+    ::send(socket_, buf, strlen(buf), 0);
 
     delete[] buf;
 

@@ -4,6 +4,7 @@ project(quoilam VERSION 0.3.4)
 # Enable C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_INSTALL_PREFIX /usr/include/quoilam)
+set(CMAKE_BUILD_TYPE Debug)
 
 include(CTest)
 enable_testing()
@@ -21,6 +22,7 @@ set(quoilam_libs
     HttpServer
     Database
     Typedef
+    Json
 )
 file(GLOB quoilam_headers "${CMAKE_SOURCE_DIR}/src/include/*.h*")
 set(example_executables
@@ -31,6 +33,7 @@ set(example_executables
     test_stdlogger
     test_httpserver
     test_database
+    test_json
 )
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/executable)
@@ -125,7 +128,12 @@ add_executable(test_database
 target_link_libraries(test_database
     Database
 )
-
+add_executable(test_json
+    ${PROJECT_SOURCE_DIR}/src/examples/test_json.cpp
+)
+target_link_libraries(test_json
+Json
+)
 
 install(TARGETS ${quoilam_libs}
     ARCHIVE DESTINATION lib

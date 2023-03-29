@@ -4,7 +4,6 @@
 #include <cstring>
 namespace quoilam
 {
-
     Database::Database(const std::string &path, int open_flags)
         : logger(new StdLogger("database"))
     {
@@ -27,7 +26,7 @@ namespace quoilam
             logger->log("read table failed. err:", res);
             return;
         }
-
+        
         logger->log("successfully opened database");
     }
 
@@ -106,7 +105,6 @@ namespace quoilam
 
         for (int i = 0; i <= col - 1; ++i)
             colname.push_back(presult[i]);
-        logger->log(1);
 
 
         for (int i = col; i < col * row + col; ++i)
