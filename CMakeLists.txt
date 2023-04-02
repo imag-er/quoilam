@@ -132,7 +132,7 @@ add_executable(test_json
     ${PROJECT_SOURCE_DIR}/src/examples/test_json.cpp
 )
 target_link_libraries(test_json
-Json
+    Json
 )
 
 install(TARGETS ${quoilam_libs}
