@@ -6,13 +6,22 @@ int main()
     using namespace std;
     using namespace quoilam;
 
-    JsonValue json(JsonValueType::Object);
+    Json json(JsonType::Object);
 
-    json["123"] = string("123");
+    json.parse("{\"string\": \"test\",\"number\": 123.0,\"child\": {\"string\": \"test\",\"number\": 123.0}}");
+    // json["str"] = JString("hello world");
 
-    json["456"] = 123.0;
+    // json["number"] = JNumber(123.0);
 
-    json["789"] = 867.0;
+    // json["boolean"] = JBool(true);
+
+    // json["array"] = JArray{Json(12222.0), JString("hello"), json["boolean"]};
+
+    // json["boolean"] = JBool(false);
+
+    // json["object"] = json;
+
+    // json["null"] = Json(JsonType::Null);
 
     std::cout << json.stringrify() << std::endl;
     return 0;

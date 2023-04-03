@@ -1,13 +1,24 @@
 #pragma once
-#include "InnerLogger.hpp"
 #include <memory>
+#include <iostream>
 namespace quoilam
 {
-    class StdLogger: private InnerLogger
+    class InnerLogger
+    {
+    protected:
+        template <class First>
+        static void inner_log(First &&first);
+
+        template <class First, class... Args>
+        static void inner_log(First &&first, Args &&...args);
+    };
+
+
+    class StdLogger : private InnerLogger
     {
 
     public:
-        StdLogger(const std::string& name, const char& separator = '\t');
+        StdLogger(const std::string &name, const char &separator = '\t');
 
         template <class... Args>
         void log(Args... args)
@@ -23,5 +34,21 @@ namespace quoilam
         const char sep;
     };
 
+    template <class First, class... Args>
+    void InnerLogger::inner_log(First &&first, Args &&...args)
+    {
+        std::cout << first;
+        if (sizeof...(args) > 0)
+            inner_log(args...);
+        return;
+    }
+
+    template <class First>
+    void InnerLogger::inner_log(First &&first)
+    {
+        std::cout << first << std::endl;
+    }
+
     extern StdLogger glog;
+
 };
