@@ -1,0 +1,35 @@
+set(PACKAGE_NAME quoilam)
+set(PACKAGE_VERSION @PROJECT_VERSION@)
+set(PACKAGE_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PACKAGE_NAME})
+
+find_package(Threads REQUIRED)
+# add libs
+foreach(lib_name ${quoilam_libs})
+    add_library(${lib_name}
+        STATIC
+        ${PROJECT_SOURCE_DIR}/src/include/${lib_name}.h
+        ${PROJECT_SOURCE_DIR}/src/include/${lib_name}.cpp
+    )
+endforeach()
+
+
+# link_libraries
+target_link_libraries(ThreadPool
+    pthread
+)
+target_link_libraries(Client
+    SocketBase
+)
+target_link_libraries(Server
+    SocketBase
+    ThreadPool
+    StdLogger
+)
+target_link_libraries(HttpServer
+    Server
+)
+target_link_libraries(Database
+    StdLogger
+    sqlite3
+    Typedef
+)
