@@ -9,8 +9,6 @@ set(CMAKE_BUILD_TYPE Debug)
 include(CTest)
 enable_testing()
 
-find_package(Threads REQUIRED)
-
 include_directories(src/include/)
 
 set(quoilam_libs
@@ -25,18 +23,8 @@ set(quoilam_libs
     Json
 )
 file(GLOB quoilam_headers "${CMAKE_SOURCE_DIR}/src/include/*.h*")
-set(example_executables
-    test_client
-    test_server
-    test_threadpool
-    test_multiclient
-    test_stdlogger
-    test_httpserver
-    test_database
-    test_json
-)
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/executable)
+
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/library)
 
 # add libs
@@ -48,101 +36,47 @@ foreach(lib_name ${quoilam_libs})
     )
 endforeach()
 
-# link_libraries
-target_link_libraries(ThreadPool
-    pthread
-    StdLogger
-)
-target_link_libraries(Client
-    SocketBase
-    StdLogger
-)
-target_link_libraries(Server
-    SocketBase
-    ThreadPool
-    StdLogger
-)
-target_link_libraries(HttpServer
-    Server
-)
-target_link_libraries(Database
-    StdLogger
-    sqlite3
-    Typedef
-)
 
-# test_executables
-
-# Client
-add_executable(test_client
-    ${PROJECT_SOURCE_DIR}/src/examples/test_client.cpp
-)
-target_link_libraries(test_client
-    Client
-)
-
-# Server
-add_executable(test_server
-    ${PROJECT_SOURCE_DIR}/src/examples/test_server.cpp
-)
-target_link_libraries(test_server
-    Server
-)
-
-# MultiClient
-add_executable(test_multiclient
-    ${PROJECT_SOURCE_DIR}/src/examples/test_multiclient.cpp
-)
-target_link_libraries(test_multiclient
-    Client
-    ThreadPool
-)
-
-# StdLogger
-add_executable(test_stdlogger
-    ${PROJECT_SOURCE_DIR}/src/examples/test_stdlogger.cpp
-)
-target_link_libraries(test_stdlogger
-    StdLogger
-)
-
-# ThreadPool
-add_executable(test_threadpool
-    ${PROJECT_SOURCE_DIR}/src/examples/test_threadpool.cpp
-)
-target_link_libraries(test_threadpool
-    ThreadPool
-)
-
-# HttpServer
-add_executable(test_httpserver
-    ${PROJECT_SOURCE_DIR}/src/examples/test_httpserver.cpp
-)
-target_link_libraries(test_httpserver
-    HttpServer
-)
-
-add_executable(test_database
-    ${PROJECT_SOURCE_DIR}/src/examples/test_database.cpp
-)
-target_link_libraries(test_database
-    Database
-)
-add_executable(test_json
-    ${PROJECT_SOURCE_DIR}/src/examples/test_json.cpp
-)
-target_link_libraries(test_json
-    Json
-)
-
+# 安装lib
 install(TARGETS ${quoilam_libs}
     ARCHIVE DESTINATION lib
 )
-
+# 安装header
 install(FILES ${quoilam_headers}
     DESTINATION /usr/include/quoilam)
+
+# 导入config生成助手
+include(CMakePackageConfigHelpers)
+
+# 通过cmake.in生成导出文件
+configure_package_config_file( 
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/quoilamConfig.cmake.in 
+    ${CMAKE_CURRENT_BINARY_DIR}/quoilamConfig.cmake
+    INSTALL_DESTINATION lib/
+)
+write_basic_package_version_file( 
+    ${CMAKE_CURRENT_BINARY_DIR}/quoilamConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion 
+)
+
+# 安装.cmake文件 代表静态库的配置文件
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/quoilamConfig.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/quoilamConfigVersion.cmake
+    DESTINATION lib/
+)
+
+# 导出target到配置文件
+export(
+    TARGETS 
+    Server Client ThreadPool StdLogger SocketBase HttpServer Database Typedef Json 
+    FILE ${CMAKE_CURRENT_BINARY_DIR}/quoilamTargets.cmake )
+
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 
 include(CPack)
+
+

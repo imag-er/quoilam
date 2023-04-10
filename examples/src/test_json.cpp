@@ -1,14 +1,25 @@
 #include "Json.h"
 #include <iostream>
-
-int main()
+#include <fstream>
+int main(int argc,char**argv)
 {
     using namespace std;
     using namespace quoilam;
 
     Json json(JsonType::Object);
 
-    json.parse("{\"string\": \"test\",\"number\": 123.0,\"child\": {\"string\": \"test\",\"number\": 123.0}}");
+    std::ifstream ifs("/home/sm/quoilam/build/executable/11.json");
+    if (!ifs) return 1;
+    std::string str, cache;
+    while (!ifs.eof())
+    {
+        ifs >> cache;
+        str += cache;
+    }
+    std::cout << "read str:\n"
+              << str << std ::endl;
+    json.parse(str);
+
     // json["str"] = JString("hello world");
 
     // json["number"] = JNumber(123.0);

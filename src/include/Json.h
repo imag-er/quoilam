@@ -51,6 +51,12 @@ namespace quoilam
         JArray &asarray() const;
         JObject &asobject() const;
 
+        const JBool getbool() const;
+        const JNumber getnumber() const;
+        const JString getstring() const;
+        const JArray getarray() const;
+        const JObject getobject() const;
+
         class ValueTypeError : public std::runtime_error
         {
         public:
@@ -66,14 +72,6 @@ namespace quoilam
         JsonType type;
 
     private:
-        // union
-        // {
-        //     std::shared_ptr<JBool> jbool;
-        //     std::shared_ptr<JNumber> jnumber;
-        //     std::shared_ptr<JString> jstring;
-        //     std::shared_ptr<JArray> jarray;
-        //     std::shared_ptr<JObject> jobject;
-        // };
         union
         {
             JBool *jbool;

@@ -197,12 +197,42 @@ namespace quoilam
             throw ValueTypeError();
         return *jobject;
     }
+
+    const JBool Json::getbool() const
+    {
+        if (type != JsonType::Boolean)
+            throw ValueTypeError();
+        return bool(*jbool);
+    }
+    const JNumber Json::getnumber() const
+    {
+        if (type != JsonType::Number)
+            throw ValueTypeError();
+        return JNumber(*jnumber);
+    }
+    const JString Json::getstring() const
+    {
+        if (type != JsonType::String)
+            throw ValueTypeError();
+        return JString(*jstring);
+    }
+    const JArray Json::getarray() const
+    {
+        if (type != JsonType::Array)
+            throw ValueTypeError();
+        return JArray(*jarray);
+    }
+    const JObject Json::getobject() const
+    {
+        if (type != JsonType::Object)
+            throw ValueTypeError();
+        return JObject(*jobject);
+    }
     const Json Json::parse(const std::string &raw_json)
     {
         Json res;
         auto it = raw_json.begin();
-
-        std::cout << "char read:\t" << *it << std::endl;
+        std::cout <<"raw json" << raw_json<<std::endl;
         switch (*it)
         {
         case '{':
@@ -214,20 +244,50 @@ namespace quoilam
                 std::string key, value_cache;
                 Json value;
                 // 先找到第一个key的"
-                std::cout << "object char read:\t"<<*it << std::endl;
-
                 while (*it != '\"')
-                    it++;
+                    ++it;
 
-                while (*it != '\"')
+                ++it;
+
+                char c;
+                while ((c = *it) != '\"')
                     key += *it++;
 
-                ++it; // 跳过冒号
+                std::cout << "got key:\t" << key << std::endl;
 
-                while (*it++ != ',')
-                    value_cache += *it;
+                // 跳过冒号
+                ++it;
+                while (*it == ' ' || *it == '\n' || *it == ':')
+                    ++it;
 
-                std::cout << "value cache\t" << value_cache << std::endl;
+                int depth = 0;
+                while (1)
+                {
+                    
+                    if (it == raw_json.end())
+                    {
+                        break;
+                    }
+                    if (*it == '{')
+                        ++depth;
+
+                    if (*it == '}' && depth != 0)
+                        --depth;
+
+                    if (*it == '}' && depth == 0)
+                    {
+
+                        break;
+                    }
+
+                    if (*it == ',' && depth == 0)
+                        break;
+
+                    value_cache += *it++;
+                }
+
+                std::cout << "value cache:\t" << value_cache << std::endl;
+
                 value = parse(value_cache);
                 std::cout << "processed\t" << value.stringrify() << std::endl;
                 res[key] = value;
@@ -241,7 +301,10 @@ namespace quoilam
             std::string cache;
             ++it;
             while (*it != '\"')
+            {
+
                 cache += *it++;
+            }
 
             res = JString(cache);
             break;
@@ -260,8 +323,6 @@ namespace quoilam
         case '0' ... '9':
         {
             std::string cache;
-            while (*it++ != ',')
-                cache += *it;
             res = JNumber(atof(cache.c_str()));
             break;
         }
