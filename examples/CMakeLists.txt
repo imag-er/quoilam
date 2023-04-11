@@ -8,7 +8,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(quoilam_DIR /usr/include/quoilam/lib/)
 include(CTest)
 enable_testing()
-
+set(quoilam_DIR /usr/include/quoilam/lib/cmake/quoilam/)
 find_package(quoilam REQUIRED)
 
 set(executables
@@ -25,7 +25,6 @@ set(executables
 foreach(f ${executables})
     add_executable(f ${CMAKE_PROGRAM_PATH}/src/${f}.cpp)
 endforeach(f ${executables})
-
 target_link_libraries(test_threadpool quoilam::ThreadPool)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
