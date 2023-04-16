@@ -3,7 +3,7 @@ project(quoilam VERSION 0.3.4)
 
 # Enable C++17
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_INSTALL_PREFIX /usr/include/quoilam)
+set(CMAKE_INSTALL_PREFIX /usr/local/include/quoilam)
 set(CMAKE_BUILD_TYPE Debug)
 
 include(CTest)
@@ -48,7 +48,7 @@ endforeach()
 # )
 # 安装header
 install(FILES ${quoilam_headers}
-    DESTINATION /usr/include/quoilam)
+    DESTINATION /usr/local/include/quoilam)
 
 include(CMakePackageConfigHelpers)
 
@@ -74,12 +74,12 @@ install(TARGETS ${quoilam_libs}
 install(EXPORT quoilamTargets
     FILE quoilamTargets.cmake
     NAMESPACE quoilam::
-    DESTINATION lib/cmake/quoilam
+    DESTINATION cmake/
 )
 install(FILES
     ${PROJECT_SOURCE_DIR}/cmake/quoilamConfig.cmake
     ${PROJECT_SOURCE_DIR}/cmake/quoilamConfigVersion.cmake
-    DESTINATION lib/cmake/quoilam
+    DESTINATION cmake/
 )
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

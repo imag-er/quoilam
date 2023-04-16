@@ -1,4 +1,5 @@
 @PACKAGE_INIT@
+include(CMakePackageConfigHelpers)
 
 include("${CMAKE_CURRENT_LIST_DIR}/quoilamTargets.cmake")
 
@@ -22,20 +23,20 @@ set(quoilam_LIBRARIES quoilam::${quoilam_libs})
 
 # 暴露库的依赖项
 set(quoilam_DEPENDENCIES)
-
+ 
 # 安装路径
 set(quoilam_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
 # 生成配置文件
 configure_package_config_file(
-  "${CMAKE_CURRENT_LIST_DIR}/quoilamConfig.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/quoilamConfig.cmake"
+  "${CMAKE_INSTALL_PREFIX}/include/quoilam/cmake/quoilamConfig.cmake.in"
+  "${CMAKE_INSTALL_PREFIX}/include/quoilam/cmake/quoilamConfig.cmake"
   INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/quoilam"
   PATH_VARS quoilam_INCLUDE_DIRS quoilam_INSTALL_PREFIX
   )
 
 # 安装配置文件
 install(
-  FILES "${CMAKE_CURRENT_BINARY_DIR}/quoilamConfig.cmake"
+  FILES "${CMAKE_INSTALL_PREFIX}/include/quoilam/cmake/quoilamConfig.cmake"
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/quoilam"
   )

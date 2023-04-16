@@ -5,10 +5,9 @@ project(examples VERSION 0.3.4)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Debug)
 
-set(quoilam_DIR /usr/include/quoilam/lib/)
+set(quoilam_DIR /usr/local/include/quoilam/cmake/)
 include(CTest)
 enable_testing()
-set(quoilam_DIR /usr/include/quoilam/lib/cmake/quoilam/)
 find_package(quoilam REQUIRED)
 
 set(executables
@@ -23,9 +22,9 @@ set(executables
 )
 
 foreach(f ${executables})
-    add_executable(f ${CMAKE_PROGRAM_PATH}/src/${f}.cpp)
+    add_executable(${f} ${CMAKE_PROGRAM_PATH}/src/${f}.cpp)
 endforeach(f ${executables})
-target_link_libraries(test_threadpool quoilam::ThreadPool)
+# target_link_libraries(test_threadpool quoilam::ThreadPool)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
