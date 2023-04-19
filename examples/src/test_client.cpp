@@ -1,6 +1,6 @@
 #include <iostream>
-#include "Client.h"
-#include "Singleton.hpp"
+#include <Client.h>
+#include <Singleton.hpp>
 #include <string>
 int main(int, char**)
 {

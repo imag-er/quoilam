@@ -5,10 +5,12 @@ project(examples VERSION 0.3.4)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Debug)
 
-set(quoilam_DIR /usr/local/include/quoilam/cmake/)
 include(CTest)
 enable_testing()
+
 find_package(quoilam REQUIRED)
+
+include_directories(/usr/local/include/quoilam/include/)
 
 set(executables
     test_client
@@ -22,9 +24,20 @@ set(executables
 )
 
 foreach(f ${executables})
-    add_executable(${f} ${CMAKE_PROGRAM_PATH}/src/${f}.cpp)
+    add_executable(${f} src/${f}.cpp)
 endforeach(f ${executables})
-# target_link_libraries(test_threadpool quoilam::ThreadPool)
+
+target_link_libraries(test_json quoilam::Json)
+target_link_libraries(test_httpserver quoilam::HttpServer)
+target_link_libraries(test_client quoilam::Client)
+target_link_libraries(test_multiclient quoilam::Client quoilam::ThreadPool)
+target_link_libraries(test_server quoilam::Server)
+target_link_libraries(test_stdlogger quoilam::StdLogger)
+target_link_libraries(test_threadpool quoilam::ThreadPool)
+target_link_libraries(test_json quoilam::Json)
+target_link_libraries(test_database quoilam::Database)
+
+
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
