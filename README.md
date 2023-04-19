@@ -14,25 +14,21 @@ threadpool
 ## How to build
 ```shell
     git clone git@github.com:imag-er/quoilam.git
-    cd quoilam && mkdir -p build && cd build  
-    cmake .. && make
-    # make install
+    cd quoilam
+    ./build.sh
 ```
-## Install && Use
-```shell
-    make install
-``` 
+## Use
 ```cmake
 # CMakeLists.txt
-link_directories(/usr/include/quoilam/lib)
-target_link_libraries(your_target_name PRIVATE 
-    Httpserver
-    StdLogger
-    ...
-)
+find_package(quoilam REQUIRED)
+include_directories(/usr/local/include/quoilam/include/)
+
+
+# example
+add_executable(myserver myserver.cpp)
+target_link_libraries(myserver quoilam::Server)
+
 ```
-## Modules
--> [Modules](MODULE.md)
 
 ## tips
 the name, quoilam, is a mixture of french and my dialect,originates from my nickname while in high school

@@ -1,7 +1,5 @@
 project(Database)
 
-find_package(sqlite3)
-
 include_directories(${CMAKE_SOURCE_DIR}/include)
 add_library(Database STATIC Database.cpp)
 
