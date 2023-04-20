@@ -1,26 +1,37 @@
-#include <Pipe.h>
+#include <quoilam/Pipe.h>
 #include <string>
-#include <StdLogger.h>
+
+#include <quoilam/StdLogger.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <quoilam/Typedef.h>
+
 int main(int argc, char **argv)
 {
-    // 0 receiver 1 writer
-    int role = argv[1][0] - '0';
-
-    // simplex halfduplex duplex
-    int type = argv[2][0] - '0';
-
     using namespace quoilam;
-    SimplexPipe sp("mypipe");
-    switch (role)
+    using namespace quoilam::ultility;
+    using namespace quoilam::io;
+
+    pid_t pid = fork();
+    
+    if (pid > 0)
     {
-    case 0:
-        std::string buffer = sp.read();
-        glog.log("received: ", buffer);
-        break;
-    case 1:
-        std::string buffer = "pipe test";
+        ultility::Pipe sp = Pipe("mypipe", io::iomode::read);
+        glog.log("ready to receive");
+        while (1)
+        {
+            std::string buffer = sp.read();
+            if (buffer != "")
+                glog.log("received: ", buffer);
+        }
+    }
+    else
+    {
+        Pipe sp = Pipe("mypipe", iomode::write);
+        std::string buffer;
+        std::cout << "waiting for input:" << std::endl;
+        std::cin >> buffer;
         sp.write(buffer);
-        break;
     }
     return 0;
 }

@@ -2,31 +2,38 @@
 
 #include <sstream>
 #include <cstring>
-namespace quoilam
+namespace quoilam::ultility
 {
-    Database::Database(const std::string &path, int open_flags)
-        : logger(new StdLogger("database"))
+    Database::Database(const std::string &path, io::iomode open_flags)
+        : logger(new io::StdLogger("database"))
     {
         int flags = 0;
-        if (open_flags & io::read)
-            flags |= SQLITE_OPEN_READONLY;
-        if (open_flags & io::readwrite)
-            flags |= SQLITE_OPEN_READWRITE;
-        if (open_flags & io::app)
-            flags |= SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE;
-        logger->log(flags);
-        if (open_flags & io::ate)
+        switch (open_flags)
         {
+        case io::iomode::read:
+            flags |= SQLITE_OPEN_READONLY;
+            break;
+        case io::iomode::readwrite:
+            flags |= SQLITE_OPEN_READWRITE;
+            break;
+        case io::iomode::app:
+            flags |= SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE;
+            break;
+        case io::iomode::ate:
             // TODO: wait for filesystem succeed
+            break;
+        default:
+            break;
         }
-        
+        logger->log(flags);
+
         int res = sqlite3_open_v2(path.c_str(), &pDB, flags, nullptr);
         if (res != SQLITE_OK)
         {
             logger->log("read table failed. err:", res);
             return;
         }
-        
+
         logger->log("successfully opened database");
     }
 
@@ -105,7 +112,6 @@ namespace quoilam
 
         for (int i = 0; i <= col - 1; ++i)
             colname.push_back(presult[i]);
-
 
         for (int i = col; i < col * row + col; ++i)
             rettable[i / col].push_back(presult[i]);

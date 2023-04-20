@@ -1,10 +1,10 @@
 #include "SocketBase.h"
-namespace quoilam
+namespace quoilam::network
 {
 
     SocketBase::SocketBase(const std::string &name_) : name(name_)
     {
-        logger = std::make_shared<StdLogger>(name_);
+        logger = std::make_shared<io::StdLogger>(name_);
         
     }
 

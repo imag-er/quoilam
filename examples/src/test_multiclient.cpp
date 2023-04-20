@@ -1,16 +1,17 @@
-#include "ThreadPool.h"
-#include "Client.h"
+#include <quoilam/ThreadPool.h>
+#include <quoilam/Client.h>
 #include <string>
-#include "Singleton.hpp"
+#include <quoilam/Singleton.hpp>
 #include <cstdint>
 #include <vector>
 #include <iostream>
-#include "StdLogger.h"
+#include <quoilam/StdLogger.h>
+
 #define DISABLE_COUT
 int main(int argc, char **argv)
 {
     using namespace std;
-    using namespace quoilam;
+    QUOILAM_ALL_NAMESPACE;
 
     mutex m;
     if (argc < 3)

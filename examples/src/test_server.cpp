@@ -1,9 +1,9 @@
-#include "Server.h"
-#include "Singleton.hpp"
+#include <quoilam/Server.h>
+#include <quoilam/Singleton.hpp>
 
 int main()
 {
-    using namespace quoilam;
+    QUOILAM_ALL_NAMESPACE;
     Server* s = singleton<Server>::instance();
     s->listen("0.0.0.0", 25384);
     s->exec();

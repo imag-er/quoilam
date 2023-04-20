@@ -1,6 +1,8 @@
-#include "ThreadPool.h"
-#include "Singleton.hpp"
-#include "StdLogger.h"
+#include <quoilam/ThreadPool.h>
+#include <quoilam/Singleton.hpp>
+#include <quoilam/StdLogger.h>
+#include <quoilam/Typedef.h>
+
 #include <iostream>
 #include <chrono>
 #include <string>
@@ -15,6 +17,7 @@ using namespace std;
 
 int func(int index)
 {
+    using namespace quoilam::ultility;
     static mutex m;
     while (1)
     {
@@ -31,6 +34,8 @@ int func(int index)
 
 int main()
 {
+    QUOILAM_ALL_NAMESPACE
+    
     ThreadPool *pool = singleton<ThreadPool>::instance(16);
 
     auto f = [](int a, int b)

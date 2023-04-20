@@ -1,10 +1,10 @@
-#include "../include/Database.h"
+#include <quoilam/Database.h>
 
 int main()
 {
-    using namespace quoilam;
+    QUOILAM_ALL_NAMESPACE;
 
-    Database q("resource.db",io::app);
+    Database q("resource.db",iomode::app);
 
     q.create_table("newtable", {"col1 INT", "col2 INT", "col3 INT"});
     q.switch_table("newtable");

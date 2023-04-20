@@ -1,7 +1,8 @@
 #pragma once
 #include <memory>
 #include <iostream>
-namespace quoilam
+#include "Typedef.h"
+namespace quoilam::io
 {
     class InnerLogger
     {
@@ -26,9 +27,11 @@ namespace quoilam
             std::cout << '[' << logger_name << ']';
             inner_log(args...);
         }
-
+        
         using SharedPtr = std::shared_ptr<StdLogger>;
 
+        template <class... Args>
+        void operator()(Args... args);
     protected:
         const std::string logger_name;
         const char sep;
@@ -48,6 +51,13 @@ namespace quoilam
     {
         std::cout << first << std::endl;
     }
+
+    template <class... Args>
+    void StdLogger::operator()(Args... args)
+    {
+        this->log(std::forward<Args>(args)...);
+    }
+
 
     extern StdLogger glog;
 

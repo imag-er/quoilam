@@ -2,7 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
-namespace quoilam
+namespace quoilam::text
 {
     Json::Json(const Json &value)
     {

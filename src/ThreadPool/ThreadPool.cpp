@@ -1,46 +1,49 @@
 #include "ThreadPool.h"
 #include "Singleton.hpp"
-quoilam::ThreadPool::ThreadPool(const uint32_t& thread_cnt_max):
-    running(true),
-    max_thread_cnt(thread_cnt_max),
-    logger(std::make_shared<StdLogger>("threadpool"))
+namespace quoilam::ultility
 {
 
-    for (uint32_t i = 0; i < thread_cnt_max; ++i)
+    ThreadPool::ThreadPool(const uint32_t &thread_cnt_max) : running(true),
+                                                                      max_thread_cnt(thread_cnt_max),
+                                                                      logger(std::make_shared<io::StdLogger>("threadpool"))
     {
-        worker_threads.emplace_back(
-            [this]()
-            {
-                while (true)
+
+        for (uint32_t i = 0; i < thread_cnt_max; ++i)
+        {
+            worker_threads.emplace_back(
+                [this]()
                 {
-                    task_t task;
+                    while (true)
                     {
-                        // 块加锁
-                        std::unique_lock<std::mutex> queue_lock{lock};
-                        // 没在运行或者有任务
-                        cv.wait(queue_lock, [this]()
-                            { return !running || (!tasks.empty()); });
-                        if (!running && tasks.empty())
-                            return;
-                        task = std::move(tasks.front());
-                        tasks.pop();
+                        task_t task;
+                        {
+                            // 块加锁
+                            std::unique_lock<std::mutex> queue_lock{lock};
+                            // 没在运行或者有任务
+                            cv.wait(queue_lock, [this]()
+                                    { return !running || (!tasks.empty()); });
+                            if (!running && tasks.empty())
+                                return;
+                            task = std::move(tasks.front());
+                            tasks.pop();
 
-                        ++(this->thread_cnt);
+                            ++(this->thread_cnt);
+                        }
+                        task();
+                        --(this->thread_cnt);
                     }
-                    task();
-                    --(this->thread_cnt);
-                }
-            });
+                });
+        }
     }
-}
 
-quoilam::ThreadPool::~ThreadPool()
-{
+    ThreadPool::~ThreadPool()
     {
-        std::unique_lock<std::mutex> queue_lock(lock);
-        running = false;
+        {
+            std::unique_lock<std::mutex> queue_lock(lock);
+            running = false;
+        }
+        cv.notify_all();
+        for (auto &thread : worker_threads)
+            thread.join();
     }
-    cv.notify_all();
-    for (auto& thread : worker_threads)
-        thread.join();
 }

@@ -1,11 +1,11 @@
-#include <Json.h>
+#include <quoilam/Json.h>
 #include <iostream>
 #include <fstream>
 int main(int argc,char**argv)
 {
     using namespace std;
     using namespace quoilam;
-
+    using namespace quoilam::text;
     Json json(JsonType::Object);
 
     std::ifstream ifs("/home/sm/quoilam/build/executable/11.json");

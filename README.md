@@ -29,6 +29,22 @@ add_executable(myserver myserver.cpp)
 target_link_libraries(myserver quoilam::Server)
 
 ```
-
+## Sturcture
+## namespace:
+## quoilam  
+- ### network   
+- - ### Server
+- - ### Client
+- - ### HttpServer
+- ### ultility  
+- - ### ThreadPool
+- - ### Database
+- - ### Pipe
+- - ### Singleton
+- ### io
+- - ### StdLogger
+- - ### 
+- ### text
+- - ### Json
 ## tips
 the name, quoilam, is a mixture of french and my dialect,originates from my nickname while in high school

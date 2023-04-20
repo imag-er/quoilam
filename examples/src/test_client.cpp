@@ -1,10 +1,11 @@
 #include <iostream>
-#include <Client.h>
-#include <Singleton.hpp>
+#include <quoilam/Client.h>
+#include <quoilam/Singleton.hpp>
 #include <string>
 int main(int, char**)
 {
-    using namespace quoilam;
+    QUOILAM_ALL_NAMESPACE;
+    
     Client c;
     c.connect("0.0.0.0", 25384);
 

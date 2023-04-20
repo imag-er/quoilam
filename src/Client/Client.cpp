@@ -2,7 +2,7 @@
 #include "Singleton.hpp"
 #include "SocketBase.h"
 
-namespace quoilam
+namespace quoilam::network
 {
 
     Client::Client():

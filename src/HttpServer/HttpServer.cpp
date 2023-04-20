@@ -1,6 +1,6 @@
 #include "HttpServer.h"
 
-namespace quoilam
+namespace quoilam::network
 {
     HttpServer::HttpServer(std::string ip, Uint port)
         : Server(Options(Options::ProtoType::custom,true))

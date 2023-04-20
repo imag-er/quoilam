@@ -8,7 +8,7 @@
 #include <atomic>
 #include <type_traits>
 #include "StdLogger.h"
-namespace quoilam
+namespace quoilam::ultility
 {
     class ThreadPool
     {
@@ -45,7 +45,7 @@ namespace quoilam
 
         std::condition_variable cv;
 
-        StdLogger::SharedPtr logger = nullptr;
+        io::StdLogger::SharedPtr logger = nullptr;
     };
 
     template <class F, class... Args>

@@ -1,5 +1,4 @@
 #pragma once
-#include "StdLogger.h"
 #include <arpa/inet.h>
 #include <cstdlib>
 #include <cstring>
@@ -11,9 +10,12 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#include "StdLogger.h"
 #include "Typedef.h"
-namespace quoilam
+namespace quoilam::network
 {
+    using namespace quoilam;
     class SocketBase
     {
     public:
@@ -23,7 +25,7 @@ namespace quoilam
         int owned_socket;
         const std::string name;
 
-        StdLogger::SharedPtr logger;
+        io::StdLogger::SharedPtr logger;
 
         void handle_error(const std::string &msg);
 

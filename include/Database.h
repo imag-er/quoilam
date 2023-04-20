@@ -5,8 +5,9 @@
 #include <tuple>
 #include "StdLogger.h"
 #include "Typedef.h"
-namespace quoilam
+namespace quoilam::ultility
 {
+
     using StrList = std::vector<std::string>;
     using StrTable = std::vector<StrList>;
 
@@ -15,7 +16,7 @@ namespace quoilam
     public:
       
 
-        Database(const std::string &path,int io_flags = io::read);
+        Database(const std::string &path,io::iomode io_flags = io::iomode::read);
         ~Database();
 
         void create_table(const std::string &table_name,
@@ -30,7 +31,7 @@ namespace quoilam
 
     protected:
         std::string dbpath;
-        std::shared_ptr<StdLogger> logger;
+        std::shared_ptr<io::StdLogger> logger;
 
         sqlite3 *pDB = nullptr;
     private:

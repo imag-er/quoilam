@@ -1,5 +1,5 @@
 # remove prev files
-rm -rf build examples/build
+sudo rm -rf build examples/build
 
 # create new build dir
 mkdir -p build examples/build
@@ -8,7 +8,7 @@ mkdir -p build examples/build
 cd build
 cmake ..
 make
-make install
+sudo make install
 
 # build test examples
 cd ../examples/build

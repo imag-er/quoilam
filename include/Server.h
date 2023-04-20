@@ -10,7 +10,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-namespace quoilam
+namespace quoilam::network
 {
 
     class Server : protected SocketBase
@@ -66,7 +66,7 @@ namespace quoilam
         void default_callback(int socket_);
 
 
-        std::shared_ptr<ThreadPool> tpool;
+        std::shared_ptr<ultility::ThreadPool> tpool;
 
         std::vector<int> client_sockets;
 

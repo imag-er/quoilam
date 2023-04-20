@@ -21,6 +21,7 @@ set(executables
     test_httpserver
     test_database
     test_json
+    # test_pipe
 )
 
 foreach(f ${executables})
@@ -36,6 +37,7 @@ target_link_libraries(test_stdlogger quoilam::StdLogger)
 target_link_libraries(test_threadpool quoilam::ThreadPool)
 target_link_libraries(test_json quoilam::Json)
 target_link_libraries(test_database quoilam::Database)
+# target_link_libraries(test_pipe quoilam::Pipe)
 
 
 

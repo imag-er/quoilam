@@ -17,12 +17,12 @@ set(quoilam_libs
     HttpServer
     Database
     Typedef
-    Json)
+    Json
+    Pipe
+    )
 
 foreach(e ${quoilam_libs})
   add_subdirectory(${CMAKE_SOURCE_DIR}/src/${e})
-
-
 endforeach(e ${quoilam_libs})
 
 install(
@@ -37,8 +37,8 @@ install(
       NAMESPACE quoilam::
       DESTINATION share/quoilam/)
 
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include
-        DESTINATION /usr/local/include/quoilam/)
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/
+        DESTINATION /usr/local/include/quoilam)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

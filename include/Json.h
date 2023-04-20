@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 #include <memory>
-namespace quoilam
+namespace quoilam::text
 {
 
     enum class JsonType

@@ -1,7 +1,7 @@
 #include "Server.h"
 #include <functional>
 #include <string>
-namespace quoilam
+namespace quoilam::network
 {
     class HttpServer : public Server
     {

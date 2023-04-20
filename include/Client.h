@@ -2,7 +2,7 @@
 #include <string>
 #include "StdLogger.h"
 #include "SocketBase.h"
-namespace quoilam
+namespace quoilam::network
 {
     class Client: protected SocketBase
     {
