@@ -17,7 +17,7 @@ using namespace std;
 
 int func(int index)
 {
-    using namespace quoilam::ultility;
+    using namespace quoilam::util;
     static mutex m;
     while (1)
     {

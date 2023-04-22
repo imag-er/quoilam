@@ -36,7 +36,7 @@ target_link_libraries(myserver quoilam::Server)
 - - ### Server
 - - ### Client
 - - ### HttpServer
-- ### ultility  
+- ### util  
 - - ### ThreadPool
 - - ### Database
 - - ### Pipe

@@ -6,7 +6,7 @@ namespace quoilam::network
     class HttpServer : public Server
     {
     public:
-        HttpServer(std::string ip, Uint port);
+        HttpServer(std::string ip, UInt port);
         std::function<std::string(std::string)> process =
             [this](std::string req) -> std::string
         {

@@ -2,7 +2,7 @@
 
 namespace quoilam::network
 {
-    HttpServer::HttpServer(std::string ip, Uint port)
+    HttpServer::HttpServer(std::string ip, UInt port)
         : Server(Options(Options::ProtoType::custom,true))
     {
         Server::listen(ip, port);
@@ -20,7 +20,7 @@ namespace quoilam::network
     void HttpServer::http_response_callback(int client_socket)
     {
         // 每次刷新都是建立新连接
-        Uint buf_size = 2048;
+        UInt buf_size = 2048;
         logger->log("handled");
         char *buffer = new char[buf_size]{0};
         while (1)

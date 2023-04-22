@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(quoilam VERSION 0.3.4)
 
+add_definitions("-Wall -std=c++17")
 # Enable C++17
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 
 include(CTest)
 enable_testing()
@@ -24,6 +25,7 @@ set(quoilam_libs
 foreach(e ${quoilam_libs})
   add_subdirectory(${CMAKE_SOURCE_DIR}/src/${e})
 endforeach(e ${quoilam_libs})
+
 
 install(
     TARGETS ${quoilam_libs}

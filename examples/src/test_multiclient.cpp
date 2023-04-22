@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     uint32_t count = atoi(argv[1]);
     // 检查回复准确性
     bool check_response = strcmp(argv[2], "false");
-    Uint correct_count = 0;
+    UInt correct_count = 0;
 
     vector<Client> vv;
     string teststr = "测试字符串";

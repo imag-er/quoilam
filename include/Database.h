@@ -5,7 +5,7 @@
 #include <tuple>
 #include "StdLogger.h"
 #include "Typedef.h"
-namespace quoilam::ultility
+namespace quoilam::util
 {
 
     using StrList = std::vector<std::string>;

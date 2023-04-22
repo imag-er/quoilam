@@ -66,7 +66,7 @@ namespace quoilam::network
         void default_callback(int socket_);
 
 
-        std::shared_ptr<ultility::ThreadPool> tpool;
+        std::shared_ptr<util::ThreadPool> tpool;
 
         std::vector<int> client_sockets;
 

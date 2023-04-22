@@ -1,11 +1,12 @@
 #include "ThreadPool.h"
 #include "Singleton.hpp"
-namespace quoilam::ultility
+namespace quoilam::util
 {
 
-    ThreadPool::ThreadPool(const uint32_t &thread_cnt_max) : running(true),
-                                                                      max_thread_cnt(thread_cnt_max),
-                                                                      logger(std::make_shared<io::StdLogger>("threadpool"))
+    ThreadPool::ThreadPool(const uint32_t &thread_cnt_max)
+        : max_thread_cnt(thread_cnt_max),
+          running(true),
+          logger(std::make_shared<io::StdLogger>("threadpool"))
     {
 
         for (uint32_t i = 0; i < thread_cnt_max; ++i)

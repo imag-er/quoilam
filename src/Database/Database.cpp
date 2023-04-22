@@ -2,7 +2,7 @@
 
 #include <sstream>
 #include <cstring>
-namespace quoilam::ultility
+namespace quoilam::util
 {
     Database::Database(const std::string &path, io::iomode open_flags)
         : logger(new io::StdLogger("database"))

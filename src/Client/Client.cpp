@@ -70,7 +70,7 @@ namespace quoilam::network
         return recvstr;
     }
 
-    bool Client::send_size(const Uint& size)
+    bool Client::send_size(const UInt& size)
     {
         // 先发送4字节的request长度数据
         int irtn = ::send(owned_socket, &size, 4, 0);
@@ -82,7 +82,7 @@ namespace quoilam::network
         logger->log("told server msg_size:", size, "  bytes");
         return true;
     }
-    bool Client::send_bytes(const Byte* data, const Uint& nbytes)
+    bool Client::send_bytes(const Byte* data, const UInt& nbytes)
     {
         // 发送request
         int irtn = ::send(owned_socket, data, nbytes, 0);
@@ -95,10 +95,10 @@ namespace quoilam::network
         logger->log(irtn, " bytes of data sent");
         return true;
     }
-    const Uint Client::recv_size()
+    const UInt Client::recv_size()
     {
         // 接收从服务器发来的response长度
-        Uint recvstr_len;
+        UInt recvstr_len;
         int irtn = ::recv(owned_socket, &recvstr_len, 4, MSG_WAITALL);
         if (irtn < 0)
         {
@@ -108,7 +108,7 @@ namespace quoilam::network
         logger->log(recvstr_len, " bytes to receive");
         return recvstr_len;
     }
-    bool Client::recv_bytes(Byte* buffer, const Uint& nbytes)
+    bool Client::recv_bytes(Byte* buffer, const UInt& nbytes)
     {
         // 接受response
         Byte* recv_buf = new Byte[nbytes];

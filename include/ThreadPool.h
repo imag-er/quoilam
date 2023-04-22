@@ -8,7 +8,7 @@
 #include <atomic>
 #include <type_traits>
 #include "StdLogger.h"
-namespace quoilam::ultility
+namespace quoilam::util
 {
     class ThreadPool
     {

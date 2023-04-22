@@ -13,10 +13,10 @@ namespace quoilam::network
 
         const std::string send(const std::string& str);
 
-        bool send_size(const Uint& size);
-        bool send_bytes(const quoilam::Byte* data, const Uint& nbytes);
-        const Uint recv_size();
-        bool recv_bytes(Byte* buffer, const Uint& nbytes);
+        bool send_size(const UInt& size);
+        bool send_bytes(const quoilam::Byte* data, const UInt& nbytes);
+        const UInt recv_size();
+        bool recv_bytes(Byte* buffer, const UInt& nbytes);
         ~Client();
 
     };

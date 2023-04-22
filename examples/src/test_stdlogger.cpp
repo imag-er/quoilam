@@ -4,7 +4,7 @@
 int main()
 {
     using namespace quoilam::io;
-    using namespace quoilam::ultility;
+    using namespace quoilam::util;
     
     auto logger = singleton<StdLogger>::instance("test_logger");
     logger->log("log test", "\t123123", 12312312, 4312u, 0xFF);

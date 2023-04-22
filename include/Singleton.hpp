@@ -1,7 +1,7 @@
 #pragma once
 #include <utility>
 
-namespace quoilam::ultility
+namespace quoilam::util
 {
     // via static variant in func
     // since c++11 , totally thread safe

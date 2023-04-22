@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(examples VERSION 0.3.4)
 
+add_definitions("-g")
+
 # Enable C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE Debug)
@@ -21,7 +23,9 @@ set(executables
     test_httpserver
     test_database
     test_json
-    # test_pipe
+    test_pipe_read
+    test_pipe_write
+
 )
 
 foreach(f ${executables})
@@ -37,7 +41,9 @@ target_link_libraries(test_stdlogger quoilam::StdLogger)
 target_link_libraries(test_threadpool quoilam::ThreadPool)
 target_link_libraries(test_json quoilam::Json)
 target_link_libraries(test_database quoilam::Database)
-# target_link_libraries(test_pipe quoilam::Pipe)
+target_link_libraries(test_pipe_read quoilam::Pipe)
+target_link_libraries(test_pipe_write quoilam::Pipe)
+
 
 
 

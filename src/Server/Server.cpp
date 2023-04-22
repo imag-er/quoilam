@@ -16,7 +16,7 @@ namespace quoilam::network
     // 构造函数 初始化socket 线程池
     Server::Server(const Options &option)
         : SocketBase("server"),
-          tpool(ultility::singleton<ultility::ThreadPool>::instance(16)),
+          tpool(util::singleton<util::ThreadPool>::instance(16)),
           opt(option)
     {
         // 初始化socket
