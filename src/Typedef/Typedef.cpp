@@ -51,8 +51,7 @@ namespace quoilam::text
 
     const ByteSeries serialize(const PVoid obj,UInt size)
     {
-        
-
+        strlen((const char*)obj);
     }
     const PVoid deserialize(const ByteSeries &)
     {
