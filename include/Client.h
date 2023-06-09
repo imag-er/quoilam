@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "Except.h"
 #include "StdLogger.h"
 #include "SocketBase.h"
 namespace quoilam::network
@@ -21,6 +22,18 @@ namespace quoilam::network
         ~Client();
 
     };
+#else
+
+    class Client: protected SocketBase
+    {
+        public:
+        Client()
+            : SocketBase("Client")
+        {
+            CLASS_NO_IMPLEMENT_EXCEPTION;
+        }
+    };
+
 #endif
 
 };

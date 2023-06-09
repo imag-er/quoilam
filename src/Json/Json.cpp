@@ -23,6 +23,8 @@ namespace quoilam::text
         case JsonType::String:
             jstring = new JString(value.asstring());
             break;
+        case JsonType::Null:
+            break;
         }
 
         type = value.type;
@@ -52,6 +54,8 @@ namespace quoilam::text
             break;
         case JsonType::String:
             jstring = new JString(value.asstring());
+            break;
+        case JsonType::Null:
             break;
         }
         type = value.type;
@@ -158,6 +162,8 @@ namespace quoilam::text
             if (jstring)
                 delete jstring;
             break;
+        case JsonType::Null:
+            break;
         }
         return;
     }
@@ -214,13 +220,16 @@ namespace quoilam::text
     const JNumber Json::getnumber() const
     {
         if (type != JsonType::Number)
-            return NULL;
+            return JNumber(*jnumber);
+
         return JNumber(*jnumber);
     }
     const JString Json::getstring() const
     {
         if (type != JsonType::String)
-            return NULL;
+
+            return JString(*jstring);
+
         return JString(*jstring);
     }
     const JArray Json::getarray() const

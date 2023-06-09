@@ -5,7 +5,8 @@
     using namespace quoilam::io;      \
     using namespace quoilam::network; \
     using namespace quoilam::text;    \
-    using namespace quoilam::util;
+    using namespace quoilam::util;    \
+    using namespace quoilam::except
 
 #include <cstdint>
 namespace quoilam
@@ -52,24 +53,10 @@ namespace quoilam::io
 }
 namespace quoilam::text
 {
-    // class ByteSeries
-    // {
-    // public:
-    //     ByteSeries(UInt bytes_count, Byte val = '\0');
-    //     ByteSeries(CRPByte buffer);
+    
 
-    //     ByteSeries(const ByteSeries &obj);
-    //     ~ByteSeries();
-
-    //     operator PByte() const;
-    //     const Byte &operator[](int index);
-    //     const UInt length() const;
-
-    // private:
-    //     std::unique_ptr<Byte> data;
-    // };
-
-    // const ByteSeries serialize(const PVoid );
-    // const PVoid deserialize(const ByteSeries &);
+}
+namespace quoilam::except
+{
 
 }

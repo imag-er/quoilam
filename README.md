@@ -41,6 +41,7 @@ target_link_libraries(myserver quoilam::Server)
 - - ### Database
 - - ### Pipe
 - - ### Singleton
+- - ### Except
 - ### io
 - - ### StdLogger
 - - ### 

@@ -10,9 +10,17 @@ set(CMAKE_BUILD_TYPE Debug)
 include(CTest)
 enable_testing()
 
-find_package(quoilam REQUIRED)
+if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    set(CMAKE_MODULE_PATH /usr/local/include/quoilam)
 
-include_directories(/usr/local/include/quoilam/include/)
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+    set(CMAKE_MODULE_PATH D:/System/Documents/libs/quoilam)
+    include_directories(D:/System/Documents/include)
+    
+    set(quoilam_DIR ${CMAKE_MODULE_PATH})
+endif()
+
+find_package(quoilam REQUIRED)
 
 set(executables
     test_client
@@ -25,7 +33,6 @@ set(executables
     test_json
     test_pipe_read
     test_pipe_write
-
 )
 
 foreach(f ${executables})
@@ -44,12 +51,7 @@ target_link_libraries(test_database quoilam::Database)
 target_link_libraries(test_pipe_read quoilam::Pipe)
 target_link_libraries(test_pipe_write quoilam::Pipe)
 
-
-
-
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 
 include(CPack)
-
-
