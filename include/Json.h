@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <exception>
 namespace quoilam::text
 {
 
@@ -57,11 +58,7 @@ namespace quoilam::text
         const JArray getarray() const;
         const JObject getobject() const;
 
-        class ValueTypeError : public std::runtime_error
-        {
-        public:
-            ValueTypeError(const std::string &msg = "value type error") : std::runtime_error(msg){};
-        };
+
 
         ~Json();
 

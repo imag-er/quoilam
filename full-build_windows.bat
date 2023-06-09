@@ -1,16 +1,16 @@
-# remove prev files
-sudo rm -rf build examples/build
+:: remove prev files
+rmdir /s /q build examples\build
 
-# create new build dir
-mkdir -p build examples/build
+:: create new build dir
+mkdir build examples\build
 
-# build libs and install
+:: build libs and install
 cd build
-cmake ..
+cmake .. -G "MinGW Makefiles"
 make
-sudo make install
+make install
 
-# build test examples
-cd ../examples/build
-cmake ..
+:: build test examples
+cd ..\examples\build
+cmake .. -G "MinGW Makefiles"
 make

@@ -13,6 +13,7 @@
 namespace quoilam::network
 {
     using namespace quoilam;
+#ifndef _WIN32
     // 构造函数 初始化socket 线程池
     Server::Server(const Options &option)
         : SocketBase("server"),
@@ -183,4 +184,5 @@ namespace quoilam::network
 
         close(socket_);
     }
+#endif
 }

@@ -5,7 +5,7 @@
 
 namespace quoilam::network
 {
-
+#ifndef _WIN32
     Client::Client():
         SocketBase("client")
     {
@@ -138,4 +138,6 @@ namespace quoilam::network
     {
         disconnect();
     }
+
+#endif
 };

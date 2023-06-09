@@ -2,6 +2,7 @@
 
 namespace quoilam::network
 {
+#ifndef _WIN32
     HttpServer::HttpServer(std::string ip, UInt port)
         : Server(Options(Options::ProtoType::custom,true))
     {
@@ -36,5 +37,5 @@ namespace quoilam::network
         }
         close(client_socket);
     }
-
+#endif
 }

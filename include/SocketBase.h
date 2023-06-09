@@ -8,7 +8,7 @@
 #include "StdLogger.h"
 #include "Typedef.h"
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/fcntl.h>

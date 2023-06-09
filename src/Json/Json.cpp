@@ -170,69 +170,78 @@ namespace quoilam::text
     JBool &Json::asbool() const
     {
         if (type != JsonType::Boolean)
-            throw ValueTypeError();
+
+            return *jbool;
+
         return *jbool;
     }
     JNumber &Json::asnumber() const
     {
         if (type != JsonType::Number)
-            throw ValueTypeError();
+            return *jnumber;
+
         return *jnumber;
     }
     JString &Json::asstring() const
     {
         if (type != JsonType::String)
-            throw ValueTypeError();
+            return *jstring;
+
         return *jstring;
     }
     JArray &Json::asarray() const
     {
         if (type != JsonType::Array)
-            throw ValueTypeError();
+            return *jarray;
+
         return *jarray;
     }
     JObject &Json::asobject() const
     {
         if (type != JsonType::Object)
-            throw ValueTypeError();
+            return *jobject;
+
         return *jobject;
     }
 
     const JBool Json::getbool() const
     {
         if (type != JsonType::Boolean)
-            throw ValueTypeError();
+            return bool(*jbool);
+
         return bool(*jbool);
     }
     const JNumber Json::getnumber() const
     {
         if (type != JsonType::Number)
-            throw ValueTypeError();
+            return NULL;
         return JNumber(*jnumber);
     }
     const JString Json::getstring() const
     {
         if (type != JsonType::String)
-            throw ValueTypeError();
+            return NULL;
         return JString(*jstring);
     }
     const JArray Json::getarray() const
     {
         if (type != JsonType::Array)
-            throw ValueTypeError();
+            return JArray(*jarray);
+
         return JArray(*jarray);
     }
     const JObject Json::getobject() const
     {
         if (type != JsonType::Object)
-            throw ValueTypeError();
+            return JObject(*jobject);
+
         return JObject(*jobject);
     }
     const Json Json::parse(const std::string &raw_json)
     {
         Json res;
         auto it = raw_json.begin();
-        std::cout <<"raw json" << raw_json<<std::endl;
+        std::cout << "raw json" << raw_json << std::endl;
         switch (*it)
         {
         case '{':
@@ -263,7 +272,7 @@ namespace quoilam::text
                 int depth = 0;
                 while (1)
                 {
-                    
+
                     if (it == raw_json.end())
                     {
                         break;

@@ -2,8 +2,10 @@
 
 #include <sstream>
 #include <cstring>
+
 namespace quoilam::util
 {
+#ifndef _WIN32
     Database::Database(const std::string &path, io::iomode open_flags)
         : logger(new io::StdLogger("database"))
     {
@@ -135,5 +137,7 @@ namespace quoilam::util
     {
         sqlite3_close(pDB);
     }
+
+#endif
 
 };

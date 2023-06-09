@@ -1,4 +1,6 @@
+#ifndef _WIN32
 #include <sqlite3.h>
+#endif
 #include <string>
 #include <vector>
 #include <memory>
@@ -10,6 +12,7 @@ namespace quoilam::util
 
     using StrList = std::vector<std::string>;
     using StrTable = std::vector<StrList>;
+#ifndef _WIN32
 
     class Database
     {
@@ -40,5 +43,6 @@ namespace quoilam::util
     };
 
 
+#endif
 
 }

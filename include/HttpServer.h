@@ -3,6 +3,7 @@
 #include <string>
 namespace quoilam::network
 {
+#ifndef _WIN32
     class HttpServer : public Server
     {
     public:
@@ -34,4 +35,5 @@ namespace quoilam::network
 
         void http_response_callback(int client_socket);
     };
+#endif
 }
