@@ -52,24 +52,24 @@ namespace quoilam::io
 }
 namespace quoilam::text
 {
-    class ByteSeries
-    {
-    public:
-        ByteSeries(UInt bytes_count, Byte val = '\0');
-        ByteSeries(CRPByte buffer);
+    // class ByteSeries
+    // {
+    // public:
+    //     ByteSeries(UInt bytes_count, Byte val = '\0');
+    //     ByteSeries(CRPByte buffer);
 
-        ByteSeries(const ByteSeries &obj);
-        ~ByteSeries();
+    //     ByteSeries(const ByteSeries &obj);
+    //     ~ByteSeries();
 
-        operator PByte() const;
-        const Byte &operator[](int index);
-        const UInt length() const;
+    //     operator PByte() const;
+    //     const Byte &operator[](int index);
+    //     const UInt length() const;
 
-    private:
-        std::unique_ptr<Byte> data;
-    };
+    // private:
+    //     std::unique_ptr<Byte> data;
+    // };
 
-    const ByteSeries serialize(const PVoid );
-    const PVoid deserialize(const ByteSeries &);
+    // const ByteSeries serialize(const PVoid );
+    // const PVoid deserialize(const ByteSeries &);
 
 }

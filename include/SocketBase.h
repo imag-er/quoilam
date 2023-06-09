@@ -1,18 +1,21 @@
 #pragma once
-#include <arpa/inet.h>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <memory>
-#include <netinet/in.h>
 #include <string>
+
+#include "StdLogger.h"
+#include "Typedef.h"
+
+#ifndef WIN32
+#include <arpa/inet.h>
+#include <netinet/in.h>
 #include <sys/fcntl.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-
-#include "StdLogger.h"
-#include "Typedef.h"
+#endif
 namespace quoilam::network
 {
     using namespace quoilam;
@@ -31,7 +34,5 @@ namespace quoilam::network
 
     private:
     };
-
-
 
 }

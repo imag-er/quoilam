@@ -15,6 +15,7 @@
 
 namespace quoilam::util
 {
+#ifndef _WIN32
     Pipe::Pipe(const std::string &path, io::iomode mode)
         : pipe_name(path), logger(path), success(false), pipe_iomode(mode)
     {
@@ -124,4 +125,5 @@ namespace quoilam::util
         return;
     }
 
+#endif
 }

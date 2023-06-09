@@ -2,17 +2,20 @@
 #include "SocketBase.h"
 #include "StdLogger.h"
 #include "ThreadPool.h"
-#include <arpa/inet.h>
 #include <functional>
-#include <netinet/in.h>
 #include <string>
+
+#ifndef _WIN32
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
 
+#endif
 namespace quoilam::network
 {
-
+#ifndef _WIN32
     class Server : protected SocketBase
     {
     public:
@@ -75,4 +78,5 @@ namespace quoilam::network
         // 选项
         Options opt;
     };
+#endif
 };

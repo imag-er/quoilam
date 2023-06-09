@@ -10,28 +10,32 @@ Linux系统除了支持信号和管道外，还支持SYSV(System V)子系统中�
 namespace quoilam::util
 {
     using namespace quoilam;
-    
+
+#ifndef _WIN32
+
     class Pipe
     {
     public:
-        Pipe(const std::string& path,io::iomode mode);
+        Pipe(const std::string &path, io::iomode mode);
         ~Pipe();
 
-        
         const std::string read();
 
-        UInt write(const std::string& data);
+        UInt write(const std::string &data);
 
         operator const bool() const;
+
     private:
         const std::string pipe_name;
 
         io::StdLogger logger;
-        
+
         bool success;
 
         io::iomode pipe_iomode;
 
         int fd;
     };
+#endif
+
 }

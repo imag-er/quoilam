@@ -4,6 +4,7 @@
 #include "SocketBase.h"
 namespace quoilam::network
 {
+#ifndef _WIN32
     class Client: protected SocketBase
     {
     public:
@@ -20,5 +21,6 @@ namespace quoilam::network
         ~Client();
 
     };
+#endif
 
 };

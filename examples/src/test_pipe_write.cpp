@@ -14,7 +14,7 @@ int main(int argc, char **argv)
     {
         glog("waiting for input:");
         std::cin >> buffer;
-        UInt wlen = sp.write(buffer);
+        Uint wlen = sp.write(buffer);
         glog("buf size:",buffer.size()," wrote:",wlen);
     }
 
