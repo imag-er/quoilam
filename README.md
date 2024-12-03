@@ -2,8 +2,7 @@
 ![](icon.png)
 
 ## Introduction
-Determined to build a c++ library like yazi.  
-Containing threadpool socket async and other modules.
+Toy
 ## Containing (increasing)
 server & client (still improving)
 singleton 
